@@ -1,7 +1,7 @@
 # spring-hot-plugin
 
 #### 介绍
-Spring 插件化开发框架
+Spring 插件化开发框架，轻、易、快、稳
 
 #### 软件架构
 软件架构说明
