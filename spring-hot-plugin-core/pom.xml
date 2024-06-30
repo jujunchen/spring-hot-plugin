@@ -20,4 +20,40 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${mybatis.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.apache.commons</groupId>-->
+<!--            <artifactId>commons-lang3</artifactId>-->
+<!--            <version>${commons.lang3.version}</version>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
+            <version>3.8.4</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>csdn.itsaysay.plugin</groupId>
+            <artifactId>spring-hot-plugin-loader</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
 </project>

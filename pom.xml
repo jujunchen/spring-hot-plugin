@@ -17,6 +17,7 @@
       <module>spring-hot-plugin-core</module>
       <module>spring-hot-plugin-common</module>
       <module>spring-hot-plugin-loader</module>
+      <module>spring-hot-plugin-demo</module>
     </modules>
 
     <properties>
@@ -30,6 +31,11 @@
       <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 
       <lombok.version>1.18.20</lombok.version>
+      <springboot.version>2.3.11.RELEASE</springboot.version>
+      <mybatis.version>2.1.4</mybatis.version>
+      <commons.lang3.version>3.14.0</commons.lang3.version>
+      <slf4j.version>2.0.13</slf4j.version>
+      <hutool.version>5.8.4</hutool.version>
     </properties>
 
     <licenses>
@@ -61,6 +67,23 @@
       </repository>
     </distributionManagement>
 
+  <repositories>
+    <!-- 阿里云maven仓库 -->
+    <repository>
+      <id>aliyun-repository</id>
+      <name>aliyun nexus</name>
+      <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
+      <!-- 是否开启发布版构件下载 -->
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <!-- 是否开启快照版构件下载 -->
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
     <developers>
       <developer>
         <name>itsaysay</name>
@@ -70,13 +93,20 @@
     </developers>
 
     <dependencies>
+
+      <dependency>
+        <groupId>cn.hutool</groupId>
+        <artifactId>hutool-core</artifactId>
+        <version>${hutool.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
       <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
-        <version>${lombok.version}</version>
         <scope>provided</scope>
-        <optional>true</optional>
       </dependency>
+
 
       <dependency>
         <groupId>junit</groupId>
@@ -85,6 +115,18 @@
         <scope>test</scope>
       </dependency>
     </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${springboot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 
     <build>
