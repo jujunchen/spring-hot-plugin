@@ -119,8 +119,9 @@ public abstract class ExecutableArchiveLauncher extends Launcher {
 	@Override
 	protected Iterator<Archive> getClassPathArchivesIterator() throws Exception {
 		Archive.EntryFilter searchFilter = this::isSearchCandidate;
+		//相比原来的代码，去掉了classPathIndex判断
 		Iterator<Archive> archives = this.archive.getNestedArchives(searchFilter,
-				(entry) -> isNestedArchive(entry) && !isEntryIndexed(entry));
+				this::isNestedArchive);
 		if (isPostProcessingClassPathArchives()) {
 			archives = applyClassPathArchivePostProcessing(archives);
 		}

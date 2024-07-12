@@ -35,11 +35,10 @@ import java.util.Iterator;
 public class JarLauncher extends ExecutableArchiveLauncher {
 
 	static final EntryFilter NESTED_ARCHIVE_ENTRY_FILTER = (entry) -> {
-//		if (entry.isDirectory()) {
-//			return entry.getName().equals("classes/");
-//		}
-//		return entry.getName().startsWith("lib/");
-		return entry.getName().equals("lib/");
+		if (entry.isDirectory()) {
+			return entry.getName().equals("BOOT-INF/classes/");
+		}
+		return entry.getName().startsWith("BOOT-INF/lib/");
 	};
 
 	public JarLauncher() {
