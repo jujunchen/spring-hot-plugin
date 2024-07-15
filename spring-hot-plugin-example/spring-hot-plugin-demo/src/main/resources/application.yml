@@ -7,7 +7,6 @@ spring:
   application:
     name: spring-hot-plugin-demo
   main:
-    allow-circular-references: true
     allow-bean-definition-overriding: true
   mvc:
     throw-exception-if-no-handler-found: true
@@ -16,10 +15,10 @@ spring:
 # 开启调式日志
 logging:
   level:
-    csdn.itsaysay.plugin: debug
+    csdn.itsaysay.plugin: DEBUG
 
 #插件配置
 plugin:
   runMode: prod
-  backup-path: E:\workspace\business-middle-platform\plugin-project\plugins\back
-  pluginPath: /Users/chenjujun/greentown-projects/business-middle-platform/plugin-project/plugins/plugin-general
+  backup-path: D:\javaprojects\spring-hot-plugin\spring-hot-plugin-example\plugin-path\back
+  pluginPath: D:\javaprojects\spring-hot-plugin\spring-hot-plugin-example\plugin-path

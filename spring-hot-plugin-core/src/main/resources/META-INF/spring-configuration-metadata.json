@@ -38,7 +38,7 @@
       "name": "plugin.basePackage",
       "type": "java.lang.String",
       "sourceType": "csdn.itsaysay.plugin.PluginAutoConfiguration",
-      "description": "插件扫描包路径，使用统一包路径，默认:csdn.itsaysay.iot.plugin"
+      "description": "插件扫描包路径，使用统一包路径，默认:csdn.itsaysay.plugin"
     }
   ]
 }
