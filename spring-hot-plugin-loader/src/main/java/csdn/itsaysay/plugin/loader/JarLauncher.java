@@ -36,9 +36,9 @@ public class JarLauncher extends ExecutableArchiveLauncher {
 
 	static final EntryFilter NESTED_ARCHIVE_ENTRY_FILTER = (entry) -> {
 		if (entry.isDirectory()) {
-			return entry.getName().equals("BOOT-INF/classes/");
+			return entry.getName().equals("classes/");
 		}
-		return entry.getName().startsWith("BOOT-INF/lib/");
+		return entry.getName().startsWith("lib/");
 	};
 
 	public JarLauncher() {

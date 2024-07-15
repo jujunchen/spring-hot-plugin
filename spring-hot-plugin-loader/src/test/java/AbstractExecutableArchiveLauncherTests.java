@@ -81,6 +81,20 @@ public abstract class AbstractExecutableArchiveLauncherTests {
 		return archive;
 	}
 
+	protected File createJarArchive(String name) throws IOException {
+		File archive = new File(this.tempDir, name);
+		JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(archive));
+
+		jarOutputStream.putNextEntry(new JarEntry("classes/"));
+		jarOutputStream.putNextEntry(new JarEntry("lib/"));
+
+		addNestedJars("", "lib/foo.jar", jarOutputStream);
+		addNestedJars("", "lib/bar.jar", jarOutputStream);
+		addNestedJars("", "lib/baz.jar", jarOutputStream);
+		jarOutputStream.close();
+		return archive;
+	}
+
 	private void addNestedJars(String entryPrefix, String lib, JarOutputStream jarOutputStream) throws IOException {
 		JarEntry libFoo = new JarEntry(entryPrefix + lib);
 		libFoo.setMethod(ZipEntry.STORED);

@@ -18,17 +18,17 @@ public class JarLauncherTest extends AbstractExecutableArchiveLauncherTests {
 
     @Test
     public void test() throws Exception {
-        File jarRoot = createJarArchive("archive.jar", "BOOT-INF");
+        File jarRoot = createJarArchive("archive.jar");
         try (JarFileArchive archive = new JarFileArchive(jarRoot)) {
             JarLauncher launcher = new JarLauncher(archive);
             List<Archive> classPathArchives = new ArrayList<>();
             launcher.getClassPathArchivesIterator().forEachRemaining(classPathArchives::add);
             assertThat(classPathArchives).hasSize(4);
             assertThat(getUrls(classPathArchives)).containsOnly(
-                    new URL("jar:" + jarRoot.toURI().toURL() + "!/BOOT-INF/classes!/"),
-                    new URL("jar:" + jarRoot.toURI().toURL() + "!/BOOT-INF/lib/foo.jar!/"),
-                    new URL("jar:" + jarRoot.toURI().toURL() + "!/BOOT-INF/lib/bar.jar!/"),
-                    new URL("jar:" + jarRoot.toURI().toURL() + "!/BOOT-INF/lib/baz.jar!/"));
+                    new URL("jar:" + jarRoot.toURI().toURL() + "!/classes!/"),
+                    new URL("jar:" + jarRoot.toURI().toURL() + "!/lib/foo.jar!/"),
+                    new URL("jar:" + jarRoot.toURI().toURL() + "!/lib/bar.jar!/"),
+                    new URL("jar:" + jarRoot.toURI().toURL() + "!/lib/baz.jar!/"));
             for (Archive classPathArchive : classPathArchives) {
                 classPathArchive.close();
             }
