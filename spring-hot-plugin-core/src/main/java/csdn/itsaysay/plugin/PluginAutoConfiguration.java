@@ -40,7 +40,7 @@ public class PluginAutoConfiguration {
     /**
      * 扫描的包路径
      */
-    @Value("${basePackage:com.xxx.iot.plugin}")
+    @Value("${basePackage:csdn.itsaysay.plugin}")
     private String basePackage;
 
     public RuntimeMode environment() {
