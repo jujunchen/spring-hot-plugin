@@ -11,6 +11,11 @@ spring:
   mvc:
     throw-exception-if-no-handler-found: true
     static-path-pattern: /static/**
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
 
 # 开启调式日志
 logging:
