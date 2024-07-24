@@ -31,4 +31,9 @@ public class PluginConstants {
     public static final String PLUGINDESCRIPTION = "pluginDescription";
 
     public static final String PLUGIN_POM = "plugins/pom.xml";
+    public static final String FILE_PREFIX = "file:/";
+
+    public static final String JAR_DELIMITER = "!/";
+
+    public static final String JAR_NAME = "jar";
 }
