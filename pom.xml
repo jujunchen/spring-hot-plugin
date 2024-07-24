@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-      <groupId>org.sonatype.oss</groupId>
-      <artifactId>oss-parent</artifactId>
-      <version>7</version>
-    </parent>
+<!--    <parent>-->
+<!--      <groupId>org.sonatype.oss</groupId>-->
+<!--      <artifactId>oss-parent</artifactId>-->
+<!--      <version>7</version>-->
+<!--    </parent>-->
 
     <groupId>csdn.itsaysay.plugin</groupId>
     <artifactId>spring-hot-plugin-parent</artifactId>
@@ -18,6 +18,7 @@
       <module>spring-hot-plugin-common</module>
       <module>spring-hot-plugin-loader</module>
       <module>spring-hot-plugin-example</module>
+      <module>spring-hot-plugin-maven</module>
     </modules>
 
     <properties>
@@ -38,59 +39,50 @@
       <hutool.version>5.8.4</hutool.version>
     </properties>
 
-    <licenses>
-      <license>
-        <name>The Apache Software License, Version 2.0</name>
-        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        <distribution>repo</distribution>
-      </license>
-    </licenses>
+<!--    <licenses>-->
+<!--      <license>-->
+<!--        <name>The Apache Software License, Version 2.0</name>-->
+<!--        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>-->
+<!--        <distribution>repo</distribution>-->
+<!--      </license>-->
+<!--    </licenses>-->
 
-    <scm>
-      <url>https://gitee.com/itsaysay/spring-hot-plugin</url>
-      <connection>scm:https://gitee.com/itsaysay/spring-hot-plugin.git</connection>
-      <developerConnection>scm:https://gitee.com/itsaysay/spring-hot-plugin.git</developerConnection>
-      <tag>1.0</tag>
-    </scm>
+<!--    <scm>-->
+<!--      <url>https://gitee.com/itsaysay/spring-hot-plugin</url>-->
+<!--      <connection>scm:https://gitee.com/itsaysay/spring-hot-plugin.git</connection>-->
+<!--      <developerConnection>scm:https://gitee.com/itsaysay/spring-hot-plugin.git</developerConnection>-->
+<!--      <tag>1.0</tag>-->
+<!--    </scm>-->
 
 
-    <distributionManagement>
-      <snapshotRepository>
-        <id>sonatype-nexus-snapshots</id>
-        <name>oss Snapshots Repository</name>
-        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      </snapshotRepository>
-      <repository>
-        <id>sonatype-nexus-staging</id>
-        <name>oss Staging Repository</name>
-        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-      </repository>
-    </distributionManagement>
+<!--    <distributionManagement>-->
+<!--      <snapshotRepository>-->
+<!--        <id>sonatype-nexus-snapshots</id>-->
+<!--        <name>oss Snapshots Repository</name>-->
+<!--        <url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+<!--      </snapshotRepository>-->
+<!--      <repository>-->
+<!--        <id>sonatype-nexus-staging</id>-->
+<!--        <name>oss Staging Repository</name>-->
+<!--        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+<!--      </repository>-->
+<!--    </distributionManagement>-->
 
   <repositories>
-    <!-- 阿里云maven仓库 -->
     <repository>
       <id>aliyun-repository</id>
       <name>aliyun nexus</name>
       <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
-      <!-- 是否开启发布版构件下载 -->
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <!-- 是否开启快照版构件下载 -->
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
     </repository>
   </repositories>
 
-    <developers>
-      <developer>
-        <name>itsaysay</name>
-        <email>chenjujun@aliali.vip</email>
-        <url>https://itsaysay.blog.csdn.net/</url>
-      </developer>
-    </developers>
+<!--    <developers>-->
+<!--      <developer>-->
+<!--        <name>itsaysay</name>-->
+<!--        <email>chenjujun@aliali.vip</email>-->
+<!--        <url>https://itsaysay.blog.csdn.net/</url>-->
+<!--      </developer>-->
+<!--    </developers>-->
 
     <dependencies>
 
@@ -151,58 +143,58 @@
           </configuration>
         </plugin>
 
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>${maven-source-plugin.version}</version>
-          <executions>
-            <execution>
-              <phase>package</phase>
-              <goals>
-                <goal>jar-no-fork</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
+<!--        <plugin>-->
+<!--          <groupId>org.apache.maven.plugins</groupId>-->
+<!--          <artifactId>maven-source-plugin</artifactId>-->
+<!--          <version>${maven-source-plugin.version}</version>-->
+<!--          <executions>-->
+<!--            <execution>-->
+<!--              <phase>package</phase>-->
+<!--              <goals>-->
+<!--                <goal>jar-no-fork</goal>-->
+<!--              </goals>-->
+<!--            </execution>-->
+<!--          </executions>-->
+<!--        </plugin>-->
 
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-gpg-plugin</artifactId>
-          <version>${maven-gpg-plugin.version}</version>
-          <configuration>
-            <skip>${plugin.skip}</skip>
-          </configuration>
-          <executions>
-            <execution>
-              <id>sign-artifacts</id>
-              <phase>verify</phase>
-              <goals>
-                <goal>sign</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
+<!--        <plugin>-->
+<!--          <groupId>org.apache.maven.plugins</groupId>-->
+<!--          <artifactId>maven-gpg-plugin</artifactId>-->
+<!--          <version>${maven-gpg-plugin.version}</version>-->
+<!--          <configuration>-->
+<!--            <skip>${plugin.skip}</skip>-->
+<!--          </configuration>-->
+<!--          <executions>-->
+<!--            <execution>-->
+<!--              <id>sign-artifacts</id>-->
+<!--              <phase>verify</phase>-->
+<!--              <goals>-->
+<!--                <goal>sign</goal>-->
+<!--              </goals>-->
+<!--            </execution>-->
+<!--          </executions>-->
+<!--        </plugin>-->
 
       </plugins>
     </build>
 
-    <profiles>
-      <profile>
-        <id>dev</id>
-        <activation>
-          <activeByDefault>true</activeByDefault>
-        </activation>
-        <properties>
-          <plugin.skip>true</plugin.skip>
-        </properties>
-      </profile>
+<!--    <profiles>-->
+<!--      <profile>-->
+<!--        <id>dev</id>-->
+<!--        <activation>-->
+<!--          <activeByDefault>true</activeByDefault>-->
+<!--        </activation>-->
+<!--        <properties>-->
+<!--          <plugin.skip>true</plugin.skip>-->
+<!--        </properties>-->
+<!--      </profile>-->
 
-      <profile>
-        <id>release</id>
-        <properties>
-          <plugin.skip>false</plugin.skip>
-        </properties>
-      </profile>
-    </profiles>
+<!--      <profile>-->
+<!--        <id>release</id>-->
+<!--        <properties>-->
+<!--          <plugin.skip>false</plugin.skip>-->
+<!--        </properties>-->
+<!--      </profile>-->
+<!--    </profiles>-->
 
 </project>
