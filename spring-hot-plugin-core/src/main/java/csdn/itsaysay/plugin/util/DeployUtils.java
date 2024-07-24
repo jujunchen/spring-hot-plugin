@@ -3,9 +3,8 @@ package csdn.itsaysay.plugin.util;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import csdn.itsaysay.plugin.constants.PluginConstants;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -24,9 +23,9 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+@Slf4j
 public class DeployUtils {
 
-	private static final Logger log = LoggerFactory.getLogger(DeployUtils.class);
 	/**
 	 * 读取jar包中所有类文件
 	 */
@@ -40,7 +39,7 @@ public class DeployUtils {
 		        String name = jarEntry.getName();
 				//读取非依赖包的类文件
 		        if (!name.startsWith(PluginConstants.LIB) && name.endsWith(PluginConstants.CLASS_SUFFIX)) {
-					String className = name.replace(PluginConstants.CLASS_SUFFIX, "").replaceAll("/", ".");
+					String className = name.replaceFirst(PluginConstants.CLASSES + "/", "").replace(PluginConstants.CLASS_SUFFIX, "").replaceAll("/", ".");
 					classNameSet.add(className);
 		        }
 		    }

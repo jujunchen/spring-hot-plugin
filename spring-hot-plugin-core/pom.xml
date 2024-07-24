@@ -36,16 +36,17 @@
             <optional>true</optional>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.apache.commons</groupId>-->
-<!--            <artifactId>commons-lang3</artifactId>-->
-<!--            <version>${commons.lang3.version}</version>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model</artifactId>
             <version>3.8.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>csdn.itsaysay.plugin</groupId>
+            <artifactId>spring-hot-plugin-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
 

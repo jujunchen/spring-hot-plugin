@@ -1,5 +1,8 @@
 package csdn.itsaysay.plugin;
 
+import cn.hutool.core.util.ArrayUtil;
+import csdn.itsaysay.plugin.loader.LaunchedURLClassLoader;
+import csdn.itsaysay.plugin.loader.jar.JarFile;
 import csdn.itsaysay.plugin.util.DeployUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -82,12 +85,9 @@ public class PluginClassRegister {
 		Set<String> classNames = DeployUtils.readClassFile(path);
 		URLClassLoader classLoader = null;
 		try {
-			//class 加载器
 			URL[] dependenciesURLs = pluginInfo.getDependenciesPath();
-			//插件自身的class加入到自定义classLoader中
-			classLoader = new URLClassLoader(new URL[]{pluginInfo.getPath()}, Thread.currentThread().getContextClassLoader());
-			//将lib的类路径加入到appClassLoader中
-			appClassLoaderAddURL(dependenciesURLs);
+			//插件的类路径加入到自定义classLoader中
+			classLoader = createClassLoader(dependenciesURLs);
 
 			//一个插件创建一个applicationContext
 			GenericWebApplicationContext pluginApplicationContext = new GenericWebApplicationContext();
@@ -102,20 +102,21 @@ public class PluginClassRegister {
 			Map<String, Class> mapperNames = new HashMap<>();
 			for (String className : classNames) {
 				Class clazz = classLoader.loadClass(className);
+				//类名转换成小写字母
 				String simpleClassName = DeployUtils.transformName(className);
 				//controller接口
 				if (DeployUtils.isController(clazz)) {
 					controllerNames.add(simpleClassName);
 				}
 				//mapper接口
-				if (DeployUtils.isMapper(clazz)) {
-					mapperNames.put(simpleClassName, clazz);
-				}
+//				if (DeployUtils.isMapper(clazz)) {
+//					mapperNames.put(simpleClassName, clazz);
+//				}
 			}
 			//处理其他bean，如定时任务
-			otherSpringBean(pluginApplicationContext);
+//			otherSpringBean(pluginApplicationContext);
 			//实例化插件的mapper，依赖主程序sqlSession
-			handlerMapperBean((ServletWebServerApplicationContext) applicationContext, pluginApplicationContext, mapperNames);
+//			handlerMapperBean((ServletWebServerApplicationContext) applicationContext, pluginApplicationContext, mapperNames);
 			//刷新插件上下文
 			pluginApplicationContext.refresh();
 
@@ -124,16 +125,13 @@ public class PluginClassRegister {
 
 			return pluginApplicationContext;
 		} catch (Exception | Error e) {
-			throw new PluginException("注册bean异常", e);
-		} finally {
-			try {
-				if (classLoader != null) {
-					classLoader.close();
-				}
-			} catch (IOException e) {
-				log.error("classLoader关闭失败", e);
-			}
+			throw  new PluginException("注册bean异常", e);
 		}
+	}
+
+	private URLClassLoader createClassLoader(URL[] newPath) {
+		JarFile.registerUrlProtocolHandler();
+		return new LaunchedURLClassLoader(newPath, getClass().getClassLoader());
 	}
 
 	private void handlerControllerBean(GenericWebApplicationContext pluginApplicationContext,
