@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.greentown.plugin</groupId>
+		<artifactId>third-plugins</artifactId>
+		<version>0.1.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>plugin-demo</artifactId>
+	<description>demo连接器</description>
+
+	<dependencies>
+
+	</dependencies>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/resources/assembly/package.xml</descriptor>
+					</descriptors>
+					<archive>
+						<!--插件的id、版本、描述打包时候写入MANIFEST.MF-->
+						<manifestEntries>
+							<pluginId>${project.artifactId}</pluginId>
+							<pluginVersion>${project.version}</pluginVersion>
+							<pluginDescription>${project.description}</pluginDescription>
+						</manifestEntries>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

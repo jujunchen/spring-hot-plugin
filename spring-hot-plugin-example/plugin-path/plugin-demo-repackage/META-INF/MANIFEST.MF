@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Created-By: 1.8.0_144 (Oracle Corporation)
+pluginId: plugin-demo
+pluginVersion: 1.0-SNAPSHOT
+pluginDescription: 插件测试Demo
