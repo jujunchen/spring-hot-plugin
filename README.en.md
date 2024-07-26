@@ -1,7 +1,7 @@
 # spring-hot-plugin
 
 #### Description
-Spring 插件化开发框架
+Spring plugin development framework, Light, Fast, Easy, and Stable
 
 #### Software Architecture
 Software architecture description
