@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>plugin-demo</artifactId>
+    <description>测试插件Demo</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -33,4 +34,22 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>csdn.itsaysay.plugin</groupId>
+                <artifactId>spring-hot-plugin-maven</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -123,7 +123,7 @@ public class DefaultPluginManager implements PluginManager {
 		//生产环境从jar包中读取
 		if (RuntimeMode.PROD == pluginAutoConfiguration.environment()) {
 			//获取jar包列表
-			List<File> jarFiles =  FileUtil.loopFiles(path.toString(), file -> file.getName().endsWith(PluginConstants.REPACKAGE + PluginConstants.JAR_SUFFIX));
+			List<File> jarFiles =  FileUtil.loopFiles(path.toString(), file -> file.getName().endsWith(PluginConstants.JAR_SUFFIX));
 			for (File jarFile : jarFiles) {
 				//读取配置
 				try(JarFileArchive archive = new JarFileArchive(jarFile)) {
