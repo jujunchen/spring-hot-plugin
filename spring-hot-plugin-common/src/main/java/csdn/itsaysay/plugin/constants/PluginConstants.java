@@ -35,5 +35,9 @@ public class PluginConstants {
 
     public static final String JAR_DELIMITER = "!/";
 
+    public static final String JAR_File_DELIMITER = "/";
+
+    public static final String JAR_File_ACROSS = "-";
+
     public static final String JAR_NAME = "jar";
 }

@@ -14,6 +14,7 @@ import csdn.itsaysay.plugin.listener.DefaultPluginListenerFactory;
 import csdn.itsaysay.plugin.loader.JarLauncher;
 import csdn.itsaysay.plugin.loader.archive.Archive;
 import csdn.itsaysay.plugin.loader.archive.JarFileArchive;
+import csdn.itsaysay.plugin.util.DeployUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -149,10 +150,15 @@ public class DefaultPluginManager implements PluginManager {
 	private URL[] toUrls(Iterator<Archive> archives) throws Exception {
 		List<URL> urls = new ArrayList<>(50);
 		while (archives.hasNext()) {
-			urls.add(archives.next().getUrl());
+			URL url = archives.next().getUrl();
+			if (!DeployUtils.isUseApplicationJar(applicationContext, url)) {
+				urls.add(url);
+			}
 		}
 		return urls.toArray(new URL[0]);
 	}
+
+
 
 	@Override
 	public PluginInfo install(Path jarPath) {
