@@ -1,14 +1,11 @@
 package csdn.itsaysay.plugin;
 
-import cn.hutool.core.util.ArrayUtil;
 import csdn.itsaysay.plugin.loader.LaunchedURLClassLoader;
 import csdn.itsaysay.plugin.loader.jar.JarFile;
 import csdn.itsaysay.plugin.util.DeployUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.mapper.MapperFactoryBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
@@ -21,12 +18,15 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static csdn.itsaysay.plugin.util.DeployUtils.isController;
 
 /**
  * @Author: jujun chen
@@ -81,8 +81,6 @@ public class PluginClassRegister {
 	}
 
 	private ApplicationContext registerBean(PluginInfo pluginInfo) {
-		String path = pluginInfo.getPath().getPath();
-		Set<String> classNames = DeployUtils.readClassFile(path);
 		URLClassLoader classLoader = null;
 		try {
 			URL[] dependenciesURLs = pluginInfo.getDependenciesPath();
@@ -96,32 +94,10 @@ public class PluginClassRegister {
 
 			ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(pluginApplicationContext);
 			scanner.scan(configuration.getBasePackage());
-
-			//筛选bean
-			List<String> controllerNames = new ArrayList<>();
-			Map<String, Class> mapperNames = new HashMap<>();
-			for (String className : classNames) {
-				Class clazz = classLoader.loadClass(className);
-				//类名转换成小写字母
-				String simpleClassName = DeployUtils.transformName(className);
-				//controller接口
-				if (DeployUtils.isController(clazz)) {
-					controllerNames.add(simpleClassName);
-				}
-				//mapper接口
-//				if (DeployUtils.isMapper(clazz)) {
-//					mapperNames.put(simpleClassName, clazz);
-//				}
-			}
-			//处理其他bean，如定时任务
-//			otherSpringBean(pluginApplicationContext);
-			//实例化插件的mapper，依赖主程序sqlSession
-//			handlerMapperBean((ServletWebServerApplicationContext) applicationContext, pluginApplicationContext, mapperNames);
-			//刷新插件上下文
 			pluginApplicationContext.refresh();
 
 			//注册接口
-			handlerControllerBean(pluginApplicationContext,pluginInfo, controllerNames);
+			registerControllerToParent(pluginApplicationContext, pluginInfo);
 
 			return pluginApplicationContext;
 		} catch (Exception | Error e) {
@@ -134,20 +110,24 @@ public class PluginClassRegister {
 		return new LaunchedURLClassLoader(newPath, getClass().getClassLoader());
 	}
 
-	private void handlerControllerBean(GenericWebApplicationContext pluginApplicationContext,
-									   PluginInfo pluginInfo,
-									   List<String> controllerNames) {
+	private void registerControllerToParent(GenericWebApplicationContext pluginApplicationContext,
+									   PluginInfo pluginInfo) throws ClassNotFoundException {
+		Set<String> classNames = DeployUtils.readClassFile(pluginInfo.getPath().getPath());
 		Set<RequestMappingInfo> pluginRequestMappings = new HashSet<>();
-		for (String beanName : controllerNames) {
-			Object bean = pluginApplicationContext.getBean(beanName);
-			//注册接口
-			Set<RequestMappingInfo> requestMappingInfos = registerController(bean);
-			requestMappingInfos.forEach(requestMappingInfo -> {
-				log.info("插件{}注册接口{}", pluginInfo.getId(), requestMappingInfo);
-			});
-			pluginRequestMappings.addAll(requestMappingInfos);
+		for (String className : classNames) {
+			Class<?> aClass = Class.forName(className, false, pluginApplicationContext.getClassLoader());
+			if (isController(aClass)) {
+				Object bean = pluginApplicationContext.getBean(aClass);
+				Set<RequestMappingInfo> requestMappingInfos = registerController(bean);
+				printRegisterSuccessController(pluginInfo, requestMappingInfos);
+				pluginRequestMappings.addAll(requestMappingInfos);
+			}
 		}
 		requestMappings.put(pluginInfo.getId(), pluginRequestMappings);
+	}
+
+	private void printRegisterSuccessController(PluginInfo pluginInfo, Set<RequestMappingInfo> requestMappingInfos) {
+		requestMappingInfos.forEach(requestMappingInfo -> log.info("插件{}注册接口{}", pluginInfo.getId(), requestMappingInfo));
 	}
 
 	private void otherSpringBean(GenericWebApplicationContext pluginApplicationContext) {
@@ -180,20 +160,17 @@ public class PluginClassRegister {
 
 
 	private Set<RequestMappingInfo> registerController(Object bean) {
-		Class<?> aClass = bean.getClass();
 		Set<RequestMappingInfo> requestMappingInfos = new HashSet<>();
-		if (Boolean.TRUE.equals(DeployUtils.isController(aClass))) {
-			Method[] methods = aClass.getDeclaredMethods();
-			for (Method method : methods) {
-				if (DeployUtils.isHaveRequestMapping(method)) {
-					try {
-						RequestMappingInfo requestMappingInfo = (RequestMappingInfo)
-								getMappingForMethod.invoke(requestMappingHandlerMapping, method, aClass);
-						requestMappingHandlerMapping.registerMapping(requestMappingInfo, bean, method);
-						requestMappingInfos.add(requestMappingInfo);
-					} catch (Exception e){
-						log.error("接口注册异常", e);
-					}
+		Method[] methods = bean.getClass().getDeclaredMethods();
+		for (Method method : methods) {
+			if (DeployUtils.isHaveRequestMapping(method)) {
+				try {
+					RequestMappingInfo requestMappingInfo = (RequestMappingInfo)
+							getMappingForMethod.invoke(requestMappingHandlerMapping, method, bean.getClass());
+					requestMappingHandlerMapping.registerMapping(requestMappingInfo, bean , method);
+					requestMappingInfos.add(requestMappingInfo);
+				} catch (Exception e){
+					log.error("接口注册异常", e);
 				}
 			}
 		}
