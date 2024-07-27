@@ -1,22 +1,42 @@
-# spring-hot-plugin
+<div align="center">
+<span style="font-size: 30px;font-weight:bold">
+Spring 插件化开发框架
+</span>
 
-#### Description
+[🤔Reporting Issues][Issues-url]   [📘中文文档][cn-url]
+
+[![license][license-image]][license-url]
+[![build][build-image]][build-url]
+[![jdk][jdk-image]][jdk-url]
+[![hutool][hutool-image]][hutool-url]
+</div>
+
+[license-image]: https://img.shields.io/badge/license-Apache%202.0-green
+[stars-image]: https://badgen.net/github/stars/jujunchen/spring-hot-plugin
+[build-image]: https://img.shields.io/badge/build-Spring%20Boot%202.7.18-45e91c
+[jdk-image]: https://img.shields.io/badge/JDK-8+-green
+[hutool-image]: https://img.shields.io/badge/hutool-5.8.4-green
+
+[license-url]: ./LICENSE
+[build-url]: https://github.com/spring-projects/spring-boot
+[jdk-url]: https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html
+[hutool-url]: https://github.com/dromara/hutool
+[Issues-url]: https://github.com/jujunchen/spring-hot-plugin/issues
+[cn-url]: README.md
+
+## Description
 Spring plugin development framework, Light, Fast, Easy, and Stable
 
-#### Software Architecture
-Software architecture description
+## Software Architecture
+![架构图](./images/architecture.png)
 
-#### Installation
+## Installation
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+
 
 #### Instructions
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+
 
 #### Contribution
 
@@ -24,13 +44,3 @@ Software architecture description
 2.  Create Feat_xxx branch
 3.  Commit your code
 4.  Create Pull Request
-
-
-#### Gitee Feature
-
-1.  You can use Readme\_XXX.md to support different languages, such as Readme\_en.md, Readme\_zh.md
-2.  Gitee blog [blog.gitee.com](https://blog.gitee.com)
-3.  Explore open source project [https://gitee.com/explore](https://gitee.com/explore)
-4.  The most valuable open source project [GVP](https://gitee.com/gvp)
-5.  The manual of Gitee [https://gitee.com/help](https://gitee.com/help)
-6.  The most popular members  [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
