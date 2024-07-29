@@ -15,6 +15,7 @@
     <modules>
       <module>spring-hot-plugin-demo</module>
         <module>plugin-demo</module>
+        <module>plugin-demo2</module>
     </modules>
 
     <properties>

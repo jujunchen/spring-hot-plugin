@@ -11,17 +11,17 @@ import javax.annotation.Resource;
 
 @Slf4j
 @RestController
-public class IndexController {
+public class IndexController2 {
 
     @Resource
     private PluginService pluginService;
 
-    @GetMapping({"/hello"})
+    @GetMapping({"/hello2"})
     public String hello() {
         return "Hello itsaysay!";
     }
 
-    @GetMapping({"/hello/name"})
+    @GetMapping({"/hello2/name"})
     public Person helloName() {
         Person person = new Person();
         person.setName("Human");
