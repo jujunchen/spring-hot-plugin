@@ -34,7 +34,7 @@ public class PackagePlugin extends AbstractMojo {
     @Parameter(defaultValue = "${project.build.directory}/classes", readonly = true)
     private File classesDir;
 
-    @Parameter(defaultValue = "${project.build.directory}/${project.build.finalName}.jar", readonly = true)
+    @Parameter(defaultValue = "${project.build.directory}/${project.build.finalName}-repackage.jar", readonly = true)
     private File jarFile;
 
     @Parameter(defaultValue = "${project}", readonly = true)
