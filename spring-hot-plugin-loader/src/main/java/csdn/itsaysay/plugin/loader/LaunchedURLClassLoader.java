@@ -18,6 +18,7 @@ package csdn.itsaysay.plugin.loader;
 
 import csdn.itsaysay.plugin.loader.archive.Archive;
 import csdn.itsaysay.plugin.loader.jar.Handler;
+import csdn.itsaysay.plugin.loader.jar.JarFileWrapper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -318,6 +319,28 @@ public class LaunchedURLClassLoader extends URLClassLoader {
 		Object jarFile = ((JarURLConnection) connection).getJarFile();
 		if (jarFile instanceof csdn.itsaysay.plugin.loader.jar.JarFile) {
 			((csdn.itsaysay.plugin.loader.jar.JarFile) jarFile).clearCache();
+		}
+	}
+
+	public void close() {
+		for (URL url : getURLs()) {
+			try {
+				URLConnection connection = url.openConnection();
+				if (connection instanceof JarURLConnection) {
+					closeJar(connection);
+				}
+			}
+			catch (IOException ex) {
+				// Ignore
+			}
+		}
+
+	}
+
+	private void closeJar(URLConnection connection) throws IOException {
+		Object jarFile = ((JarURLConnection) connection).getJarFile();
+		if (jarFile instanceof JarFileWrapper) {
+			((JarFileWrapper) jarFile).close();
 		}
 	}
 

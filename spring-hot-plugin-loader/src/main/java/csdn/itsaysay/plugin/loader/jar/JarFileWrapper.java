@@ -33,7 +33,7 @@ import java.util.zip.ZipEntry;
  *
  * @author Phillip Webb
  */
-class JarFileWrapper extends AbstractJarFile {
+public class JarFileWrapper extends AbstractJarFile {
 
 	private final JarFile parent;
 
