@@ -8,7 +8,9 @@ import org.springframework.context.ApplicationContext;
  */
 public interface Register {
 
-    void register(ApplicationContext plugin, PluginInfo pluginInfo);
+    void refreshBeforeRegister(ApplicationContext plugin, PluginInfo pluginInfo);
+
+    void refreshAfterRegister(ApplicationContext plugin, PluginInfo pluginInfo);
 
     void unRegister(ApplicationContext plugin, PluginInfo pluginInfo);
 }

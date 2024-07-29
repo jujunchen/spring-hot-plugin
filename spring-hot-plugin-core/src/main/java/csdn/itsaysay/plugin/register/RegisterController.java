@@ -15,20 +15,21 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * controller 接口注册程序
+ */
 @Slf4j
-public class RegisterController implements Register {
-
-    private ApplicationContext main;
+public class RegisterController extends AbstractRegister {
 
     private Map<String, Set<RequestMappingInfo>> requestMappings = new ConcurrentHashMap<>();
 
     public RegisterController(ApplicationContext main) {
-        this.main = main;
+        super(main);
     }
     @Override
-    public void register(ApplicationContext plugin, PluginInfo pluginInfo) {
+    public void refreshAfterRegister(ApplicationContext plugin, PluginInfo pluginInfo) {
         try {
-            Set<String> classNames = DeployUtils.readClassFile(pluginInfo.getPath().getPath());
+            Set<String> classNames = DeployUtils.readClassFile(pluginInfo.getPath());
             Set<RequestMappingInfo> pluginRequestMappings = new HashSet<>();
             for (String className : classNames) {
                 Class<?> aClass = Class.forName(className, false, plugin.getClassLoader());

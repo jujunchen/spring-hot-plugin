@@ -2,7 +2,7 @@ package csdn.itsaysay.plugin;
 
 import csdn.itsaysay.plugin.loader.LaunchedURLClassLoader;
 import csdn.itsaysay.plugin.loader.jar.JarFile;
-import csdn.itsaysay.plugin.register.RegisterController;
+import csdn.itsaysay.plugin.register.Register;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.mapper.MapperFactoryBean;
@@ -10,11 +10,11 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
-import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Map;
@@ -28,14 +28,10 @@ public class PluginClassRegister {
 	private PluginAutoConfiguration configuration;
 	private Map<String, ApplicationContext> pluginBeans;
 
-	private RegisterController registerController;
-
-
 	public PluginClassRegister(ApplicationContext applicationContext, PluginAutoConfiguration configuration, Map<String, ApplicationContext> pluginBeans) {
 		this.applicationContext = applicationContext;
 		this.configuration = configuration;
 		this.pluginBeans = pluginBeans;
-		this.registerController = new RegisterController(applicationContext);
 	}
 
 
@@ -45,20 +41,21 @@ public class PluginClassRegister {
 		return pluginApplicationContext;
 	}
 	
-	public boolean unRegister(PluginInfo pluginInfo) {
+	public boolean unRegister(PluginInfo pluginInfo) throws IOException {
 		return unRegisterBean(pluginInfo);
 	}
 
-	private boolean unRegisterBean(PluginInfo pluginInfo) {
-		GenericWebApplicationContext pluginApplicationContext = (GenericWebApplicationContext) pluginBeans.get(pluginInfo.getId());
+	private boolean unRegisterBean(PluginInfo pluginInfo) throws IOException {
+		AnnotationConfigApplicationContext pluginApplicationContext = (AnnotationConfigApplicationContext) pluginBeans.get(pluginInfo.getId());
+		//取消注册
+		applyUnRegister(pluginApplicationContext, pluginInfo);
+		((LaunchedURLClassLoader)pluginApplicationContext.getClassLoader()).close();
 		pluginApplicationContext.close();
-		//取消注册接口
-		registerController.unRegister(pluginApplicationContext, pluginInfo);
-		//取消注册controller
 		pluginBeans.remove(pluginInfo.getId());
+		//及时回收掉
+		System.gc();
 		return true;
 	}
-
 
 	private ApplicationContext registerBean(PluginInfo pluginInfo) {
 		URLClassLoader classLoader = null;
@@ -68,16 +65,15 @@ public class PluginClassRegister {
 			classLoader = createClassLoader(dependenciesURLs);
 
 			//一个插件创建一个applicationContext
-			GenericWebApplicationContext pluginApplicationContext = new GenericWebApplicationContext();
-			pluginApplicationContext.setResourceLoader(new DefaultResourceLoader(classLoader));
+			AnnotationConfigApplicationContext pluginApplicationContext = new AnnotationConfigApplicationContext();
+			pluginApplicationContext.setClassLoader(classLoader);
 			pluginApplicationContext.setParent(applicationContext);
-
-			ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(pluginApplicationContext);
-			scanner.scan(configuration.getBasePackage());
+			pluginApplicationContext.scan(configuration.getBasePackage());
+			//上下文刷新前的操作
+			applyRefreshBeforeRegister(pluginApplicationContext, pluginInfo);
 			pluginApplicationContext.refresh();
-
-			//注册接口
-			registerController.register(pluginApplicationContext, pluginInfo);
+			//上下文刷新后的操作
+			applyRefreshAfterRegister(pluginApplicationContext, pluginInfo);
 
 			return pluginApplicationContext;
 		} catch (Exception | Error e) {
@@ -115,6 +111,27 @@ public class PluginClassRegister {
 			beanDefinitionBuilder.addPropertyValue("sqlSessionTemplate", sqlSessionTemplate);
 			beanDefinitionBuilder.addPropertyValue("mapperInterface", clazz);
 			beanFactory.registerBeanDefinition(simpleName, beanDefinitionBuilder.getRawBeanDefinition());
+		});
+	}
+
+	private void applyUnRegister(ApplicationContext pluginApplicationContext, PluginInfo pluginInfo) {
+		Map<String, Register> registers = applicationContext.getBeansOfType(Register.class);
+		registers.forEach((name, register) -> {
+			register.unRegister(pluginApplicationContext, pluginInfo);
+		});
+	}
+
+	private void applyRefreshAfterRegister(ApplicationContext pluginApplicationContext, PluginInfo pluginInfo) {
+		Map<String, Register> registers = applicationContext.getBeansOfType(Register.class);
+		registers.forEach((name, register) -> {
+			register.refreshAfterRegister(pluginApplicationContext, pluginInfo);
+		});
+	}
+
+	private void applyRefreshBeforeRegister(AnnotationConfigApplicationContext pluginApplicationContext, PluginInfo pluginInfo) {
+		Map<String, Register> registers = applicationContext.getBeansOfType(Register.class);
+		registers.forEach((name, register) -> {
+			register.refreshBeforeRegister(pluginApplicationContext, pluginInfo);
 		});
 	}
 

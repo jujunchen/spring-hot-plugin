@@ -1,9 +1,7 @@
 package csdn.itsaysay.plugin;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -105,10 +103,10 @@ public class DefaultPluginManager implements PluginManager {
 						.version(model.getVersion() == null ? model.getParent().getVersion() : model.getVersion())
 						.description(model.getDescription()).build();
 				//开发环境重新定义插件路径，需要指定到classes目录
-				pluginInfo.setPath(URLUtil.url(CharSequenceUtil.subBefore(path.toString(), pluginInfo.getId(), false)
+				pluginInfo.setPath(CharSequenceUtil.subBefore(path.toString(), pluginInfo.getId(), false)
 						+ File.separator + pluginInfo.getId()
 						+ File.separator + PluginConstants.TARGET
-						+ File.separator + PluginConstants.CLASSES));
+						+ File.separator + PluginConstants.CLASSES);
 				//lib依赖
 				pluginInfo.setDependenciesPath(new URL[]{
 						URLUtil.url(CharSequenceUtil.subBefore(path.toString(), pluginInfo.getId(), false)
@@ -124,7 +122,7 @@ public class DefaultPluginManager implements PluginManager {
 		//生产环境从jar包中读取
 		if (RuntimeMode.PROD == pluginAutoConfiguration.environment()) {
 			//获取jar包列表
-			List<File> jarFiles =  FileUtil.loopFiles(path.toString(), file -> file.getName().endsWith(PluginConstants.JAR_SUFFIX));
+			List<File> jarFiles =  FileUtil.loopFiles(path.toString(), file -> file.getName().endsWith(PluginConstants.REPACKAGE + PluginConstants.JAR_SUFFIX));
 			for (File jarFile : jarFiles) {
 				//读取配置
 				try(JarFileArchive archive = new JarFileArchive(jarFile)) {
@@ -136,7 +134,7 @@ public class DefaultPluginManager implements PluginManager {
 					PluginInfo pluginInfo = PluginInfo.builder().id(attr.getValue(PluginConstants.PLUGINID))
 							.version(attr.getValue(PluginConstants.PLUGINVERSION))
 							.description(attr.getValue(PluginConstants.PLUGINDESCRIPTION)).build();
-					pluginInfo.setPath(archive.getUrl());
+					pluginInfo.setPath(jarFile.getPath());
 					pluginInfo.setDependenciesPath(urls);
 					pluginInfoList.add(pluginInfo);
 				} catch (Exception e) {
@@ -166,7 +164,7 @@ public class DefaultPluginManager implements PluginManager {
 			throw new PluginException("插件安装只适用于生产环境");
 		}
 		try {
-			Set<PluginInfo> pluginInfos = buildPluginInfo(jarPath);
+			Set<PluginInfo> pluginInfos = buildPluginInfo(copyToPluginPath(jarPath));
 			if (CollUtil.isEmpty(pluginInfos)) {
 				throw new PluginException("插件不存在");
 			}
@@ -175,7 +173,6 @@ public class DefaultPluginManager implements PluginManager {
 				log.info("已存在同类插件{}，将覆盖安装", pluginInfo.getId());
 				uninstall(pluginInfo.getId());
 			}
-            copyToPluginPath(jarPath);
 			start(pluginInfo);
 			return pluginInfo;
 		} catch (Exception e) {
@@ -235,7 +232,7 @@ public class DefaultPluginManager implements PluginManager {
 	}
 
 	private void clear(PluginInfo pluginInfo) {
-		PathUtil.del(Paths.get(pluginInfo.getPath().getPath()));
+		FileUtil.del(Paths.get(pluginInfo.getPath()));
 		pluginInfoMap.remove(pluginInfo.getId());
 	}
 
@@ -251,21 +248,26 @@ public class DefaultPluginManager implements PluginManager {
 	}
 
 	private void backupPlugin(PluginInfo pluginInfo) {
-		String backupPath = pluginAutoConfiguration.getBackupPath();
-		if (CharSequenceUtil.isBlank(backupPath)) {
-			return;
+		try {
+			String backupPath = pluginAutoConfiguration.getBackupPath();
+			if (CharSequenceUtil.isBlank(backupPath)) {
+				return;
+			}
+			String newName = pluginInfo.getId() + PluginConstants.JAR_SUFFIX;
+			String newPath = backupPath + File.separator + newName;
+			FileUtil.copyFile(pluginInfo.getPath(), newPath, StandardCopyOption.REPLACE_EXISTING);
+		} catch (Exception e) {
+			throw new PluginException("插件[%s]备份失败", e, pluginInfo.getId());
 		}
-		String newName = pluginInfo.getId() + DateUtil.now() + PluginConstants.JAR_SUFFIX;
-		String newPath = backupPath + File.separator + newName;
-		FileUtil.copyFile(pluginInfo.getPath().getPath(), newPath);
 	}
 
-	private void copyToPluginPath(Path jarPath) {
+	private Path copyToPluginPath(Path jarPath) {
 		String pluginPath = pluginAutoConfiguration.getPluginPath();
 		if (CharSequenceUtil.isBlank(pluginPath)) {
 			throw new PluginException("插件目录不存在");
 		}
-		FileUtil.copyFile(jarPath.toString(), pluginPath, StandardCopyOption.REPLACE_EXISTING);
+		File file = FileUtil.copyFile(jarPath.toString(), pluginPath, StandardCopyOption.REPLACE_EXISTING);
+		return Paths.get(file.getPath());
 	}
 
 	@Override

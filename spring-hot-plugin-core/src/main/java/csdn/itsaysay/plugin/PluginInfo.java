@@ -34,7 +34,7 @@ public class PluginInfo {
 	/**
 	 * 插件路径
 	 */
-	private URL path;
+	private String path;
 
 	/**
 	 * 插件的依赖所在路径
