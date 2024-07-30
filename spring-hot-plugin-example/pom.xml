@@ -5,11 +5,11 @@
     <parent>
       <groupId>csdn.itsaysay.plugin</groupId>
       <artifactId>spring-hot-plugin-parent</artifactId>
-      <version>1.0</version>
+      <version>1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>spring-hot-plugin-example</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
