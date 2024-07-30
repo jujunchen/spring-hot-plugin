@@ -6,7 +6,7 @@
     <parent>
         <groupId>csdn.itsaysay.plugin</groupId>
         <artifactId>spring-hot-plugin-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
 
     <artifactId>spring-hot-plugin-maven</artifactId>
