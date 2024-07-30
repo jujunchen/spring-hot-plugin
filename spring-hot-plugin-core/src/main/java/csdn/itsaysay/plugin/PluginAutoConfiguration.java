@@ -20,8 +20,8 @@ public class PluginAutoConfiguration {
     
     /**
      * 运行模式
-     *  开发环境: development、dev
-     *  生产/部署 环境: deployment、prod
+     *  开发环境: dev
+     *  生产环境: prod
      */
     @Value("${runMode:dev}")
     private String runMode;
