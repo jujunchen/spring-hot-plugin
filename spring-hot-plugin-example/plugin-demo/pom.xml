@@ -32,6 +32,13 @@
             <version>2.0.39</version>
         </dependency>
 
+        <!--这个包是海康sdk里面的，手动上传到了maven仓库，需要自己安装-->
+        <dependency>
+            <groupId>com.hik</groupId>
+            <artifactId>examples</artifactId>
+            <version>1.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
