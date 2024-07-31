@@ -19,6 +19,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -159,12 +160,12 @@ public class DefaultPluginManager implements PluginManager {
 
 
 	@Override
-	public PluginInfo install(Path jarPath) {
+	public PluginInfo install(MultipartFile file) {
 		if (RuntimeMode.PROD != pluginAutoConfiguration.environment()) {
 			throw new PluginException("插件安装只适用于生产环境");
 		}
 		try {
-			Set<PluginInfo> pluginInfos = buildPluginInfo(copyToPluginPath(jarPath));
+			Set<PluginInfo> pluginInfos = buildPluginInfo(copyToPluginPath(file));
 			if (CollUtil.isEmpty(pluginInfos)) {
 				throw new PluginException("插件不存在");
 			}
@@ -261,13 +262,20 @@ public class DefaultPluginManager implements PluginManager {
 		}
 	}
 
-	private Path copyToPluginPath(Path jarPath) {
+	private Path copyToPluginPath(MultipartFile file) {
 		String pluginPath = pluginAutoConfiguration.getPluginPath();
 		if (CharSequenceUtil.isBlank(pluginPath)) {
 			throw new PluginException("插件目录不存在");
 		}
-		File file = FileUtil.copyFile(jarPath.toString(), pluginPath, StandardCopyOption.REPLACE_EXISTING);
-		return Paths.get(file.getPath());
+		if (!pluginPath.endsWith(File.separator)) {
+			pluginPath += File.separator;
+		}
+		try {
+			File newFile = FileUtil.writeFromStream(file.getInputStream(), pluginPath + file.getOriginalFilename());
+			return Paths.get(newFile.getPath());
+		} catch (Exception e) {
+			throw new PluginException("插件上传失败", e);
+		}
 	}
 
 	@Override

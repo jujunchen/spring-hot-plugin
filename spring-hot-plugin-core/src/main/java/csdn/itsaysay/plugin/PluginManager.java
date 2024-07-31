@@ -1,9 +1,9 @@
 package csdn.itsaysay.plugin;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.annotation.Annotation;
-import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -21,10 +21,10 @@ public interface PluginManager {
 
 	/**
 	 * 安装插件,覆盖安装，并备份原版本，只适用于prod环境
-	 * @param jarPath 插件临时路径，建议不要上传到插件目录
+	 * @param inputStream 插件输入流
 	 * @return
 	 */
-	PluginInfo install(Path jarPath);
+	PluginInfo install(MultipartFile file);
 	
 	/**
 	 * 卸载插件，停止插件，删除插件，只适用于prod环境
