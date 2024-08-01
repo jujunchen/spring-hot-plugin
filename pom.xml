@@ -19,6 +19,7 @@
       <module>spring-hot-plugin-loader</module>
       <module>spring-hot-plugin-example</module>
       <module>spring-hot-plugin-maven</module>
+      <module>spring-hot-plugin-mybatis</module>
     </modules>
 
     <properties>
