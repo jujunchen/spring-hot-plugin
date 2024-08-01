@@ -23,7 +23,7 @@
             <groupId>csdn.itsaysay.plugin</groupId>
             <artifactId>spring-hot-plugin-demo</artifactId>
             <version>1.1-SNAPSHOT</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

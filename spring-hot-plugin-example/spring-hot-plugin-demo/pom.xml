@@ -40,7 +40,13 @@
         <dependency>
             <groupId>csdn.itsaysay.plugin</groupId>
             <artifactId>spring-hot-plugin-core</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>csdn.itsaysay.plugin</groupId>
+            <artifactId>spring-hot-plugin-mybatis</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

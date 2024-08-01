@@ -3,14 +3,22 @@ package csdn.itsaysay.plugin;
 import com.alibaba.fastjson.JSON;
 import com.sun.jna.Native;
 import csdn.itsaysay.plugin.bean.Person;
+import csdn.itsaysay.plugin.bean.User;
 import csdn.itsaysay.plugin.hik.HCNetSDK;
+import csdn.itsaysay.plugin.service.TestService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 @Slf4j
 @RestController
 public class IndexController {
+
+    @Resource
+    private TestService testService;
 
     @GetMapping({"/hello"})
     public String hello() {
@@ -36,5 +44,10 @@ public class IndexController {
             return false;
         }
         return true;
+    }
+
+    @GetMapping("/mybatis/getUser/{id}")
+    public User getUser(@PathVariable("id") Integer id) {
+        return testService.getUser(id);
     }
 }
