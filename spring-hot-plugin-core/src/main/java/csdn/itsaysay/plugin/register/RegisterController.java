@@ -1,10 +1,12 @@
 package csdn.itsaysay.plugin.register;
 
+import cn.hutool.core.util.ReflectUtil;
 import csdn.itsaysay.plugin.PluginInfo;
 import csdn.itsaysay.plugin.util.DeployUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.core.ReflectUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -56,6 +58,7 @@ public class RegisterController extends AbstractRegister {
 		requestMappings.remove(pluginInfo.getId());
     }
 
+
     private void printRegisterSuccessController(PluginInfo pluginInfo, Set<RequestMappingInfo> requestMappingInfos) {
         requestMappingInfos.forEach(requestMappingInfo -> log.info("插件{}注册接口{}", pluginInfo.getId(), requestMappingInfo));
     }
@@ -82,6 +85,11 @@ public class RegisterController extends AbstractRegister {
 	}
 
     private void unRegisterController(RequestMappingInfo requestMappingInfo) {
+        Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = getRequestMappingHandlerMapping().getHandlerMethods();
+        HandlerMethod handlerMethod = handlerMethodMap.get(requestMappingInfo);
+        //取消方法Bean的对象引用
+        ReflectUtil.setFieldValue(handlerMethod, "bean", new Object());
+        //取消方法的映射
         getRequestMappingHandlerMapping().unregisterMapping(requestMappingInfo);
     }
 

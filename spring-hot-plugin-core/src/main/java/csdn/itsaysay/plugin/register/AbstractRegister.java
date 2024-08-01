@@ -3,7 +3,7 @@ package csdn.itsaysay.plugin.register;
 import csdn.itsaysay.plugin.PluginInfo;
 import org.springframework.context.ApplicationContext;
 
-public class AbstractRegister implements Register{
+public abstract class AbstractRegister implements Register{
     protected ApplicationContext main;
 
     public AbstractRegister(ApplicationContext main) {
