@@ -16,13 +16,11 @@ import csdn.itsaysay.plugin.util.DeployUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.nio.file.Files;
@@ -81,7 +79,7 @@ public class DefaultPluginManager implements PluginManager {
 		return pluginInfoList;
 	}
 
-	private List<PluginInfo> loadPluginsFromPath(List<String> pluginPath) throws IOException, XmlPullParserException {
+	private List<PluginInfo> loadPluginsFromPath(List<String> pluginPath) throws Exception {
 		List<PluginInfo> pluginInfoList = new ArrayList<>();
 		for (String path : pluginPath) {
 			Path resolvePath = Paths.get(path);
@@ -91,57 +89,68 @@ public class DefaultPluginManager implements PluginManager {
 	    return pluginInfoList;
 	}
 
-	private Set<PluginInfo> buildPluginInfo(Path path) throws IOException, XmlPullParserException {
-		Set<PluginInfo> pluginInfoList = new HashSet<>();
+	private Set<PluginInfo> buildPluginInfo(Path path) throws Exception {
 		//开发环境
 		if (RuntimeMode.DEV == pluginAutoConfiguration.environment()) {
-			List<File> pomFiles =  FileUtil.loopFiles(path.toString(), file -> PluginConstants.POM.equals(file.getName()));
-			for (File file : pomFiles) {
-				if (file.toPath().endsWith(PluginConstants.PLUGIN_POM)) continue;
-				MavenXpp3Reader reader = new MavenXpp3Reader();
-				Model model = reader.read(Files.newInputStream(file.toPath()));
-				PluginInfo pluginInfo = PluginInfo.builder().id(model.getArtifactId())
-						.version(model.getVersion() == null ? model.getParent().getVersion() : model.getVersion())
-						.description(model.getDescription()).build();
-				//开发环境重新定义插件路径，需要指定到classes目录
-				pluginInfo.setPath(CharSequenceUtil.subBefore(path.toString(), pluginInfo.getId(), false)
-						+ File.separator + pluginInfo.getId()
-						+ File.separator + PluginConstants.TARGET
-						+ File.separator + PluginConstants.CLASSES);
-				//lib依赖
-				pluginInfo.setDependenciesPath(new URL[]{
-						URLUtil.url(CharSequenceUtil.subBefore(path.toString(), pluginInfo.getId(), false)
-								+ File.separator + pluginInfo.getId()
-								+ File.separator + PluginConstants.TARGET
-								+ File.separator + PluginConstants.CLASSES
-								+ File.separator + PluginConstants.LIB)
-				});
-				pluginInfoList.add(pluginInfo);
-			}
+			return handleDevPlugin(path);
 		}
 
 		//生产环境从jar包中读取
 		if (RuntimeMode.PROD == pluginAutoConfiguration.environment()) {
-			//获取jar包列表
-			List<File> jarFiles =  FileUtil.loopFiles(path.toString(), file -> file.getName().endsWith(PluginConstants.REPACKAGE + PluginConstants.JAR_SUFFIX));
-			for (File jarFile : jarFiles) {
-				//读取配置
-				try(JarFileArchive archive = new JarFileArchive(jarFile)) {
-					JarLauncher launcher = new JarLauncher(archive);
-					//读取插件中的依赖包
-					URL[] urls = toUrls(launcher.getClassPathArchivesIterator());
-					Manifest manifest = archive.getManifest();
-					Attributes attr = manifest.getMainAttributes();
-					PluginInfo pluginInfo = PluginInfo.builder().id(attr.getValue(PluginConstants.PLUGINID))
-							.version(attr.getValue(PluginConstants.PLUGINVERSION))
-							.description(attr.getValue(PluginConstants.PLUGINDESCRIPTION)).build();
-					pluginInfo.setPath(jarFile.getPath());
-					pluginInfo.setDependenciesPath(urls);
-					pluginInfoList.add(pluginInfo);
-				} catch (Exception e) {
-					throw new PluginException("插件配置读取异常:" + jarFile.getName(), e);
-				}
+			return handleProdPlugin(path);
+		}
+		return Collections.EMPTY_SET;
+	}
+
+	private Set<PluginInfo> handleProdPlugin(Path path) {
+		Set<PluginInfo> pluginInfoList = new HashSet<>();
+		//获取jar包列表
+		List<File> jarFiles =  FileUtil.loopFiles(path.toString(), file -> file.getName().endsWith(PluginConstants.REPACKAGE + PluginConstants.JAR_SUFFIX));
+		for (File jarFile : jarFiles) {
+			//读取配置
+			try(JarFileArchive archive = new JarFileArchive(jarFile)) {
+				JarLauncher launcher = new JarLauncher(archive);
+				//读取插件中的依赖包
+				URL[] urls = toUrls(launcher.getClassPathArchivesIterator());
+				Manifest manifest = archive.getManifest();
+				Attributes attr = manifest.getMainAttributes();
+				PluginInfo pluginInfo = PluginInfo.builder().id(attr.getValue(PluginConstants.PLUGINID))
+						.version(attr.getValue(PluginConstants.PLUGINVERSION))
+						.description(attr.getValue(PluginConstants.PLUGINDESCRIPTION)).build();
+				pluginInfo.setPath(jarFile.getPath());
+				pluginInfo.setDependenciesPath(urls);
+				pluginInfoList.add(pluginInfo);
+			} catch (Exception e) {
+				throw new PluginException("插件配置读取异常:" + jarFile.getName(), e);
 			}
+		}
+		return pluginInfoList;
+	}
+
+	private Set<PluginInfo> handleDevPlugin(Path path) throws Exception {
+		Set<PluginInfo> pluginInfoList = new HashSet<>();
+		List<File> pomFiles =  FileUtil.loopFiles(path.toString(), file -> PluginConstants.POM.equals(file.getName()));
+		for (File file : pomFiles) {
+			if (file.toPath().endsWith(PluginConstants.PLUGIN_POM)) continue;
+			MavenXpp3Reader reader = new MavenXpp3Reader();
+			Model model = reader.read(Files.newInputStream(file.toPath()));
+			PluginInfo pluginInfo = PluginInfo.builder().id(model.getArtifactId())
+					.version(model.getVersion() == null ? model.getParent().getVersion() : model.getVersion())
+					.description(model.getDescription()).build();
+			//开发环境重新定义插件路径，需要指定到classes目录
+			pluginInfo.setPath(CharSequenceUtil.subBefore(path.toString(), pluginInfo.getId(), false)
+					+ File.separator + pluginInfo.getId()
+					+ File.separator + PluginConstants.TARGET
+					+ File.separator + PluginConstants.CLASSES);
+			//lib依赖
+			pluginInfo.setDependenciesPath(new URL[]{
+					URLUtil.url(CharSequenceUtil.subBefore(path.toString(), pluginInfo.getId(), false)
+							+ File.separator + pluginInfo.getId()
+							+ File.separator + PluginConstants.TARGET
+							+ File.separator + PluginConstants.CLASSES
+							+ File.separator + PluginConstants.LIB)
+			});
+			pluginInfoList.add(pluginInfo);
 		}
 		return pluginInfoList;
 	}
