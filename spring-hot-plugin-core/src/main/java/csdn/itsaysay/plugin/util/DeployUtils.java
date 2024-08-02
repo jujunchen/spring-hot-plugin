@@ -5,19 +5,14 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import csdn.itsaysay.plugin.constants.PluginConstants;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
@@ -77,42 +72,42 @@ public class DeployUtils {
 	/**
 	 * 方法描述 判断class对象是否带有spring的注解
 	 */
-	public static boolean isSpringBeanClass(Class<?> cls) {
-	    if (cls == null) {
-	        return false;
-	    }
-	    //是否是接口
-	    if (cls.isInterface()) {
-	        return false;
-	    }
-	    //是否是抽象类
-	    if (Modifier.isAbstract(cls.getModifiers())) {
-	        return false;
-	    }
-	    if (cls.getAnnotation(Component.class) != null) {
-	        return true;
-	    }
-	    if (cls.getAnnotation(Mapper.class) != null) {
-	        return true;
-	    }
-	    if (cls.getAnnotation(Service.class) != null) {
-	        return true;
-	    }
-		if (cls.getAnnotation(RestController.class) != null) {
-			return true;
-		}
-	    return false;
-	}
+//	public static boolean isSpringBeanClass(Class<?> cls) {
+//	    if (cls == null) {
+//	        return false;
+//	    }
+//	    //是否是接口
+//	    if (cls.isInterface()) {
+//	        return false;
+//	    }
+//	    //是否是抽象类
+//	    if (Modifier.isAbstract(cls.getModifiers())) {
+//	        return false;
+//	    }
+//	    if (cls.getAnnotation(Component.class) != null) {
+//	        return true;
+//	    }
+//	    if (cls.getAnnotation(Mapper.class) != null) {
+//	        return true;
+//	    }
+//	    if (cls.getAnnotation(Service.class) != null) {
+//	        return true;
+//	    }
+//		if (cls.getAnnotation(RestController.class) != null) {
+//			return true;
+//		}
+//	    return false;
+//	}
 
-	public static boolean isMapper(Class<?> cls) {
-		if (cls == null) {
-			return false;
-		}
-		if (cls.getAnnotation(Mapper.class) != null) {
-			return true;
-		}
-		return false;
-	}
+//	public static boolean isMapper(Class<?> cls) {
+//		if (cls == null) {
+//			return false;
+//		}
+//		if (cls.getAnnotation(Mapper.class) != null) {
+//			return true;
+//		}
+//		return false;
+//	}
 
 	
 	public static boolean isController(Class<?> beanType) {

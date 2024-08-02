@@ -1,0 +1,1 @@
+insert into usertb (id, name, age) values(1, 'spring-hot-plugin', 18);

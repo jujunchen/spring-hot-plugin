@@ -4,15 +4,8 @@ import csdn.itsaysay.plugin.loader.LaunchedURLClassLoader;
 import csdn.itsaysay.plugin.loader.jar.JarFile;
 import csdn.itsaysay.plugin.register.Register;
 import lombok.extern.slf4j.Slf4j;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.mybatis.spring.mapper.MapperFactoryBean;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
-import org.springframework.web.context.support.GenericWebApplicationContext;
 
 import java.io.IOException;
 import java.net.URL;
@@ -84,34 +77,6 @@ public class PluginClassRegister {
 	private URLClassLoader createClassLoader(URL[] newPath) {
 		JarFile.registerUrlProtocolHandler();
 		return new LaunchedURLClassLoader(newPath, getClass().getClassLoader());
-	}
-
-	private void otherSpringBean(GenericWebApplicationContext pluginApplicationContext) {
-		//加载其他的bean
-		BeanDefinitionRegistry beanDefinitonRegistry = (BeanDefinitionRegistry) pluginApplicationContext.getBeanFactory();
-		ScheduledAnnotationBeanPostProcessor scheduledAnnotationBeanPostProcessor = new ScheduledAnnotationBeanPostProcessor();
-		BeanDefinitionBuilder usersBeanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(scheduledAnnotationBeanPostProcessor.getClass());
-		usersBeanDefinitionBuilder.setScope("singleton");
-		beanDefinitonRegistry.registerBeanDefinition("scheduledAnnotationBeanPostProcessor", usersBeanDefinitionBuilder.getRawBeanDefinition());
-
-//		RequestMappingHandlerMapping requestMappingHandlerMapping1 = new RequestMappingHandlerMapping();
-//		BeanDefinitionBuilder requestMappingHandlerMappingBeanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(requestMappingHandlerMapping1.getClass());
-//		usersBeanDefinitionBuilder.setScope("singleton");
-//		beanDefinitonRegistry.registerBeanDefinition("requestMappingHandlerMapping", requestMappingHandlerMappingBeanDefinitionBuilder.getRawBeanDefinition());
-	}
-
-	private void handlerMapperBean(ServletWebServerApplicationContext applicationContext,
-								   GenericWebApplicationContext pluginApplicationContext,
-								   Map<String, Class> mapperNames) {
-		mapperNames.forEach((simpleName, clazz) -> {
-			SqlSessionTemplate sqlSessionTemplate = (SqlSessionTemplate) applicationContext.getBean("sqlSessionTemplate");
-			BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(MapperFactoryBean.class);
-			BeanDefinitionRegistry beanFactory = (BeanDefinitionRegistry) pluginApplicationContext.getBeanFactory();
-			beanDefinitionBuilder.setScope("singleton");
-			beanDefinitionBuilder.addPropertyValue("sqlSessionTemplate", sqlSessionTemplate);
-			beanDefinitionBuilder.addPropertyValue("mapperInterface", clazz);
-			beanFactory.registerBeanDefinition(simpleName, beanDefinitionBuilder.getRawBeanDefinition());
-		});
 	}
 
 	private void applyUnRegister(ApplicationContext pluginApplicationContext, PluginInfo pluginInfo) {

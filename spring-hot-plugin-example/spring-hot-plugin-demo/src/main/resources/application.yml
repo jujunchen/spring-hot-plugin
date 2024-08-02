@@ -30,4 +30,4 @@ logging:
 plugin:
   runMode: prod
   backup-path: D:\javaprojects\spring-hot-plugin\spring-hot-plugin-example\plugin-path\back
-  pluginPath: D:\javaprojects\spring-hot-plugin\spring-hot-plugin-example\plugin-path
+  pluginPath: D:\javaprojects\spring-hot-plugin\spring-hot-plugin-example\plugin-demo\target

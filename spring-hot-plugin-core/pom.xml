@@ -6,7 +6,7 @@
     <parent>
         <groupId>csdn.itsaysay.plugin</groupId>
         <artifactId>spring-hot-plugin-parent</artifactId>
-        <version>1.0</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>spring-hot-plugin-core</artifactId>
@@ -27,15 +27,6 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
-
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>${mybatis.version}</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-
 
         <dependency>
             <groupId>org.apache.maven</groupId>

@@ -323,16 +323,15 @@ public class LaunchedURLClassLoader extends URLClassLoader {
 	}
 
 	public void close() {
-		for (URL url : getURLs()) {
-			try {
+		try {
+			super.close();
+			for (URL url : getURLs()) {
 				URLConnection connection = url.openConnection();
 				if (connection instanceof JarURLConnection) {
 					closeJar(connection);
 				}
 			}
-			catch (IOException ex) {
-				// Ignore
-			}
+		} catch (Exception ex) {
 		}
 
 	}

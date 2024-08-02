@@ -6,7 +6,7 @@
     <parent>
         <groupId>csdn.itsaysay.plugin</groupId>
         <artifactId>spring-hot-plugin-example</artifactId>
-        <version>1.0</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>spring-hot-plugin-demo</artifactId>
@@ -40,7 +40,13 @@
         <dependency>
             <groupId>csdn.itsaysay.plugin</groupId>
             <artifactId>spring-hot-plugin-core</artifactId>
-            <version>1.0</version>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>csdn.itsaysay.plugin</groupId>
+            <artifactId>spring-hot-plugin-mybatis</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -48,6 +54,13 @@
             <artifactId>fastjson</artifactId>
             <version>2.0.39</version>
         </dependency>
+
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>5.14.0</version>
+        </dependency>
+
     </dependencies>
 
 

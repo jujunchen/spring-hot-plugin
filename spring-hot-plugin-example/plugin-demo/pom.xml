@@ -6,7 +6,7 @@
     <parent>
         <groupId>csdn.itsaysay.plugin</groupId>
         <artifactId>spring-hot-plugin-example</artifactId>
-        <version>1.0</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>plugin-demo</artifactId>
@@ -22,14 +22,21 @@
         <dependency>
             <groupId>csdn.itsaysay.plugin</groupId>
             <artifactId>spring-hot-plugin-demo</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
+            <version>1.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>2.0.39</version>
+        </dependency>
+
+        <!--这个包是海康sdk里面的，手动上传到了maven仓库，需要自己安装-->
+        <dependency>
+            <groupId>com.hik</groupId>
+            <artifactId>examples</artifactId>
+            <version>1.0</version>
         </dependency>
 
     </dependencies>
@@ -39,7 +46,7 @@
             <plugin>
                 <groupId>csdn.itsaysay.plugin</groupId>
                 <artifactId>spring-hot-plugin-maven</artifactId>
-                <version>1.0</version>
+                <version>1.1-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <id>repackage</id>
