@@ -6,7 +6,7 @@
     <parent>
         <groupId>csdn.itsaysay.plugin</groupId>
         <artifactId>spring-hot-plugin-example</artifactId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.1</version>
     </parent>
 
     <artifactId>plugin-demo</artifactId>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>csdn.itsaysay.plugin</groupId>
             <artifactId>spring-hot-plugin-demo</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.1</version>
             <scope>compile</scope>
         </dependency>
 
@@ -46,7 +46,7 @@
             <plugin>
                 <groupId>csdn.itsaysay.plugin</groupId>
                 <artifactId>spring-hot-plugin-maven</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.1</version>
                 <executions>
                     <execution>
                         <id>repackage</id>
