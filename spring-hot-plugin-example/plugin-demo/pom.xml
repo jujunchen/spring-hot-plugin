@@ -23,7 +23,8 @@
             <groupId>csdn.itsaysay.plugin</groupId>
             <artifactId>spring-hot-plugin-demo</artifactId>
             <version>1.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -46,7 +47,7 @@
             <plugin>
                 <groupId>csdn.itsaysay.plugin</groupId>
                 <artifactId>spring-hot-plugin-maven</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>${project.version}</version>
                 <executions>
                     <execution>
                         <id>repackage</id>
