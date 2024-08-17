@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class MybatisConfiguration {
+public class MybatisPluginConfiguration {
 
     @Bean
     @ConditionalOnClass(SqlSession.class)

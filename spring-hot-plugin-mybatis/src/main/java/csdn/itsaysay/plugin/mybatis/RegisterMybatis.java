@@ -1,10 +1,18 @@
 package csdn.itsaysay.plugin.mybatis;
 
+import cn.hutool.core.util.ReflectUtil;
+import com.baomidou.mybatisplus.core.MybatisConfiguration;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import csdn.itsaysay.plugin.PluginAutoConfiguration;
 import csdn.itsaysay.plugin.PluginInfo;
 import csdn.itsaysay.plugin.register.AbstractRegister;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.reflection.ReflectorFactory;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -14,6 +22,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.beans.FeatureDescriptor;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -57,7 +66,24 @@ public class RegisterMybatis extends AbstractRegister {
 
     @Override
     public void unRegister(ApplicationContext plugin, PluginInfo pluginInfo) {
-
+        DefaultSqlSessionFactory sqlSessionFactory = (DefaultSqlSessionFactory) main.getBean("sqlSessionFactory");
+        Configuration configuration = sqlSessionFactory.getConfiguration();
+        if (configuration instanceof MybatisConfiguration) {
+            MybatisConfiguration mpConfiguration = (MybatisConfiguration) configuration;
+            ReflectorFactory reflectorFactory =  mpConfiguration.getReflectorFactory();
+            for (Class<?> mapper : mpConfiguration.getMapperRegistry().getMappers()) {
+                //清除MP没有清除掉的引用缓存
+                Class modelClass = ReflectionKit.getSuperClassGenericType(mapper, com.baomidou.mybatisplus.core.mapper.Mapper.class, 0);
+                TableInfo tableInfo = TableInfoHelper.getTableInfo(modelClass);
+                //null 表示已经清理过
+                if (tableInfo != null) {
+                    ((Map)ReflectUtil.getFieldValue(reflectorFactory, "reflectorMap")).remove(modelClass);
+                    ((Map)ReflectUtil.getFieldValue(ReflectionKit.class, "CLASS_FIELD_CACHE")).remove(modelClass);
+                    ((Map)ReflectUtil.getFieldValue(TableInfoHelper.class, "TABLE_NAME_INFO_CACHE")).remove(tableInfo.getTableName());
+                }
+                mpConfiguration.removeMapper(mapper);
+            }
+        }
     }
 
 

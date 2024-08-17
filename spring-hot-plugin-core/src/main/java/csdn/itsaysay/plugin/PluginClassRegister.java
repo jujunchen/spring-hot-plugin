@@ -42,7 +42,9 @@ public class PluginClassRegister {
 		AnnotationConfigApplicationContext pluginApplicationContext = (AnnotationConfigApplicationContext) pluginBeans.get(pluginInfo.getId());
 		//取消注册
 		applyUnRegister(pluginApplicationContext, pluginInfo);
-		((LaunchedURLClassLoader)pluginApplicationContext.getClassLoader()).close();
+		LaunchedURLClassLoader launchedURLClassLoader = ((LaunchedURLClassLoader)pluginApplicationContext.getClassLoader());
+		launchedURLClassLoader.close();
+		pluginApplicationContext.setClassLoader(null);
 		pluginApplicationContext.close();
 		pluginBeans.remove(pluginInfo.getId());
 		//及时回收掉

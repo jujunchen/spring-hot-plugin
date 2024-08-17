@@ -1,11 +1,13 @@
 package csdn.itsaysay.plugin.register;
 
-import cn.hutool.core.util.ReflectUtil;
 import csdn.itsaysay.plugin.PluginInfo;
 import csdn.itsaysay.plugin.util.DeployUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
 import org.springframework.cglib.core.ReflectUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -55,6 +57,10 @@ public class RegisterController extends AbstractRegister {
 		if (requestMappingInfoSet != null) {
 			requestMappingInfoSet.forEach(this::unRegisterController);
 		}
+        Map<String, Object> controllerBeans = plugin.getBeansWithAnnotation(Controller.class);
+        controllerBeans.keySet().forEach(bean -> {
+            ((DefaultListableBeanFactory)((AnnotationConfigServletWebServerApplicationContext)main).getBeanFactory()).destroySingleton(bean);
+        });
 		requestMappings.remove(pluginInfo.getId());
     }
 
@@ -88,7 +94,7 @@ public class RegisterController extends AbstractRegister {
         Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = getRequestMappingHandlerMapping().getHandlerMethods();
         HandlerMethod handlerMethod = handlerMethodMap.get(requestMappingInfo);
         //取消方法Bean的对象引用
-        ReflectUtil.setFieldValue(handlerMethod, "bean", new Object());
+//        ReflectUtil.setFieldValue(handlerMethod, "bean", new Object());
         //取消方法的映射
         getRequestMappingHandlerMapping().unregisterMapping(requestMappingInfo);
     }
