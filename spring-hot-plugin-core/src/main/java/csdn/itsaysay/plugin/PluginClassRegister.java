@@ -1,5 +1,6 @@
 package csdn.itsaysay.plugin;
 
+import cn.hutool.core.util.ReflectUtil;
 import csdn.itsaysay.plugin.loader.LaunchedURLClassLoader;
 import csdn.itsaysay.plugin.loader.jar.JarFile;
 import csdn.itsaysay.plugin.register.Register;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * 插件注册
@@ -43,6 +45,7 @@ public class PluginClassRegister {
 		//取消注册
 		applyUnRegister(pluginApplicationContext, pluginInfo);
 		LaunchedURLClassLoader launchedURLClassLoader = ((LaunchedURLClassLoader)pluginApplicationContext.getClassLoader());
+		((Vector)ReflectUtil.getFieldValue(launchedURLClassLoader, "classes")).clear();
 		launchedURLClassLoader.close();
 		pluginApplicationContext.setClassLoader(null);
 		pluginApplicationContext.close();

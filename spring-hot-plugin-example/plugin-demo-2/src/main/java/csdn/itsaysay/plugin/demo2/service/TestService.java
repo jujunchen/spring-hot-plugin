@@ -1,6 +1,6 @@
-package csdn.itsaysay.plugin.service;
+package csdn.itsaysay.plugin.demo2.service;
 
-import csdn.itsaysay.plugin.bean.User;
+import csdn.itsaysay.plugin.demo2.bean.User;
 
 public interface TestService {
     User getUser(Integer id);

@@ -1,9 +1,8 @@
-package csdn.itsaysay.plugin.service.impl;
+package csdn.itsaysay.plugin.demo2.service.impl;
 
-import csdn.itsaysay.plugin.bean.User;
-import csdn.itsaysay.plugin.mapper.TestMapper;
-import csdn.itsaysay.plugin.mapper.TestMapper2;
-import csdn.itsaysay.plugin.service.TestService;
+import csdn.itsaysay.plugin.demo2.service.TestService;
+import csdn.itsaysay.plugin.demo2.bean.User;
+import csdn.itsaysay.plugin.demo2.mapper.TestMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -13,8 +12,6 @@ public class TestServiceImpl implements TestService {
 
     @Resource
     private TestMapper testMapper;
-    @Resource
-    private TestMapper2 testMapper2;
 
 
     @Override

@@ -42,6 +42,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <version>${mp.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
             <groupId>csdn.itsaysay.plugin</groupId>
             <artifactId>spring-hot-plugin-core</artifactId>
             <version>${project.version}</version>

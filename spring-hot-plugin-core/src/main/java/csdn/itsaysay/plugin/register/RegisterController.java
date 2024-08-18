@@ -1,5 +1,6 @@
 package csdn.itsaysay.plugin.register;
 
+import cn.hutool.core.util.ReflectUtil;
 import csdn.itsaysay.plugin.PluginInfo;
 import csdn.itsaysay.plugin.util.DeployUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +10,9 @@ import org.springframework.cglib.core.ReflectUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.method.support.HandlerMethodArgumentResolverComposite;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.lang.reflect.Method;
@@ -57,9 +60,18 @@ public class RegisterController extends AbstractRegister {
 		if (requestMappingInfoSet != null) {
 			requestMappingInfoSet.forEach(this::unRegisterController);
 		}
+        //删除RequestMappingHandlerAdapter的缓存
+        RequestMappingHandlerAdapter requestMappingHandlerAdapter =  main.getBean(RequestMappingHandlerAdapter.class);
+        ((HandlerMethodArgumentResolverComposite)ReflectUtil.getFieldValue(requestMappingHandlerAdapter, "argumentResolvers")).clear();
+        ((HandlerMethodArgumentResolverComposite)ReflectUtil.getFieldValue(requestMappingHandlerAdapter, "initBinderArgumentResolvers")).clear();
+
+        //销毁单例Bean
         Map<String, Object> controllerBeans = plugin.getBeansWithAnnotation(Controller.class);
-        controllerBeans.keySet().forEach(bean -> {
-            ((DefaultListableBeanFactory)((AnnotationConfigServletWebServerApplicationContext)main).getBeanFactory()).destroySingleton(bean);
+        controllerBeans.forEach((name, bean) -> {
+            ((Map)ReflectUtil.getFieldValue(requestMappingHandlerAdapter, "sessionAttributesHandlerCache")).remove(bean.getClass());
+            ((Map)ReflectUtil.getFieldValue(requestMappingHandlerAdapter, "initBinderCache")).remove(bean.getClass());
+            ((Map)ReflectUtil.getFieldValue(requestMappingHandlerAdapter, "modelAttributeCache")).remove(bean.getClass());
+            ((DefaultListableBeanFactory)((AnnotationConfigServletWebServerApplicationContext)main).getBeanFactory()).destroySingleton(name);
         });
 		requestMappings.remove(pluginInfo.getId());
     }
@@ -94,7 +106,8 @@ public class RegisterController extends AbstractRegister {
         Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = getRequestMappingHandlerMapping().getHandlerMethods();
         HandlerMethod handlerMethod = handlerMethodMap.get(requestMappingInfo);
         //取消方法Bean的对象引用
-//        ReflectUtil.setFieldValue(handlerMethod, "bean", new Object());
+        ReflectUtil.setFieldValue(handlerMethod, "bean", new Object());
+        ReflectUtil.setFieldValue(handlerMethod, "beanType", Object.class);
         //取消方法的映射
         getRequestMappingHandlerMapping().unregisterMapping(requestMappingInfo);
     }
