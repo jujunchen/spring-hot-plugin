@@ -111,6 +111,7 @@ public class RegisterMybatis extends AbstractRegister {
             }
             SqlHelper.FACTORY = null;
         }
+        //其他
         //取消默认加载器
         Resources.setDefaultClassLoader(null);
     }
