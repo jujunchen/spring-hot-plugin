@@ -60,7 +60,7 @@ public class RegisterController extends AbstractRegister {
 		if (requestMappingInfoSet != null) {
 			requestMappingInfoSet.forEach(this::unRegisterController);
 		}
-        //删除RequestMappingHandlerAdapter的缓存
+        //删除RequestMappingHandlerAdapter的缓存，否则不销毁class
         RequestMappingHandlerAdapter requestMappingHandlerAdapter =  main.getBean(RequestMappingHandlerAdapter.class);
         ((HandlerMethodArgumentResolverComposite)ReflectUtil.getFieldValue(requestMappingHandlerAdapter, "argumentResolvers")).clear();
         ((HandlerMethodArgumentResolverComposite)ReflectUtil.getFieldValue(requestMappingHandlerAdapter, "initBinderArgumentResolvers")).clear();
