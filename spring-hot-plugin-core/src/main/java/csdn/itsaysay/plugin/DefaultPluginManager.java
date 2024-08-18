@@ -242,7 +242,7 @@ public class DefaultPluginManager implements PluginManager {
 	}
 
 	private void clear(PluginInfo pluginInfo) {
-		FileUtil.del(Paths.get(pluginInfo.getPath()));
+//		FileUtil.del(Paths.get(pluginInfo.getPath()));
 		pluginInfoMap.remove(pluginInfo.getId());
 	}
 

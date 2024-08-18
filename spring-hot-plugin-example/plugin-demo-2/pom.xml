@@ -9,8 +9,8 @@
         <version>1.1</version>
     </parent>
 
-    <artifactId>plugin-demo</artifactId>
-    <description>测试插件Demo</description>
+    <artifactId>plugin-demo-2</artifactId>
+    <description>测试插件Demo2</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

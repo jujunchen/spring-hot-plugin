@@ -29,5 +29,5 @@ logging:
 #插件配置
 plugin:
   runMode: prod
-  backup-path: D:\javaprojects\spring-hot-plugin\spring-hot-plugin-example\plugin-path\back
-  pluginPath: D:\javaprojects\spring-hot-plugin\spring-hot-plugin-example\plugin-demo\target
+  backup-path: /Users/chenjujun/java-projects/spring-hot-plugin/spring-hot-plugin-example/plugin-path/back
+  pluginPath: /Users/chenjujun/java-projects/spring-hot-plugin/spring-hot-plugin-example/plugin-path
