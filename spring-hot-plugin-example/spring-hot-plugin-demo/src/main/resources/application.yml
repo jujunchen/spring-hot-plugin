@@ -31,3 +31,4 @@ plugin:
   runMode: prod
   backup-path: /Users/chenjujun/java-projects/spring-hot-plugin/spring-hot-plugin-example/plugin-path/back
   pluginPath: /Users/chenjujun/java-projects/spring-hot-plugin/spring-hot-plugin-example/plugin-path
+  basePackage: csdn.itsaysay.demo
