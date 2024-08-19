@@ -5,9 +5,9 @@ import csdn.itsaysay.plugin.PluginInfo;
 import csdn.itsaysay.plugin.util.DeployUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
 import org.springframework.cglib.core.ReflectUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.method.support.HandlerMethodArgumentResolverComposite;
@@ -71,7 +71,7 @@ public class RegisterController extends AbstractRegister {
             ((Map)ReflectUtil.getFieldValue(requestMappingHandlerAdapter, "sessionAttributesHandlerCache")).remove(bean.getClass());
             ((Map)ReflectUtil.getFieldValue(requestMappingHandlerAdapter, "initBinderCache")).remove(bean.getClass());
             ((Map)ReflectUtil.getFieldValue(requestMappingHandlerAdapter, "modelAttributeCache")).remove(bean.getClass());
-            ((DefaultListableBeanFactory)((AnnotationConfigServletWebServerApplicationContext)main).getBeanFactory()).destroySingleton(name);
+            ((DefaultListableBeanFactory)((AnnotationConfigApplicationContext)plugin).getBeanFactory()).destroySingleton(name);
         });
 		requestMappings.remove(pluginInfo.getId());
     }
