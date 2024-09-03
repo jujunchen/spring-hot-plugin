@@ -242,7 +242,8 @@ public class DefaultPluginManager implements PluginManager {
 	}
 
 	private void clear(PluginInfo pluginInfo) {
-//		FileUtil.del(Paths.get(pluginInfo.getPath()));
+		//win 下无法删除
+		FileUtil.del(Paths.get(pluginInfo.getPath()));
 		pluginInfoMap.remove(pluginInfo.getId());
 	}
 
@@ -263,7 +264,12 @@ public class DefaultPluginManager implements PluginManager {
 			if (CharSequenceUtil.isBlank(backupPath)) {
 				return;
 			}
-			String newName = pluginInfo.getId() + PluginConstants.JAR_SUFFIX;
+			String newName = pluginInfo.getId()
+					+ PluginConstants.JAR_File_ACROSS
+					+ pluginInfo.getVersion()
+					+ PluginConstants.JAR_File_ACROSS
+					+ PluginConstants.REPACKAGE
+					+ PluginConstants.JAR_SUFFIX;
 			String newPath = backupPath + File.separator + newName;
 			FileUtil.copyFile(pluginInfo.getPath(), newPath, StandardCopyOption.REPLACE_EXISTING);
 		} catch (Exception e) {
