@@ -10,7 +10,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.method.support.HandlerMethodArgumentResolverComposite;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -62,8 +61,6 @@ public class RegisterController extends AbstractRegister {
 		}
         //删除RequestMappingHandlerAdapter的缓存，否则不销毁class
         RequestMappingHandlerAdapter requestMappingHandlerAdapter =  main.getBean(RequestMappingHandlerAdapter.class);
-        ((HandlerMethodArgumentResolverComposite)ReflectUtil.getFieldValue(requestMappingHandlerAdapter, "argumentResolvers")).clear();
-        ((HandlerMethodArgumentResolverComposite)ReflectUtil.getFieldValue(requestMappingHandlerAdapter, "initBinderArgumentResolvers")).clear();
 
         //销毁单例Bean
         Map<String, Object> controllerBeans = plugin.getBeansWithAnnotation(Controller.class);
