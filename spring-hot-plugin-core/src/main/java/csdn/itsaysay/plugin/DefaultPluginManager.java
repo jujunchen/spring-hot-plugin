@@ -181,7 +181,7 @@ public class DefaultPluginManager implements PluginManager {
 			PluginInfo pluginInfo = (PluginInfo) pluginInfos.toArray()[0];
 			if (pluginInfoMap.get(pluginInfo.getId()) != null) {
 				log.info("已存在同类插件{}，将覆盖安装", pluginInfo.getId());
-				uninstall(pluginInfo.getId());
+				stop(pluginInfo);
 			}
 			start(pluginInfo);
 			return pluginInfo;
