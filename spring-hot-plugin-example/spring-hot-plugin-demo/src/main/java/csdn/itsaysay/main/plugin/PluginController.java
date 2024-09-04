@@ -1,8 +1,8 @@
 package csdn.itsaysay.main.plugin;
 
+import csdn.itsaysay.main.plugin.service.PluginService;
 import csdn.itsaysay.main.plugin.req.PluginReq;
 import csdn.itsaysay.main.plugin.res.PluginRes;
-import csdn.itsaysay.main.plugin.service.PluginService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
