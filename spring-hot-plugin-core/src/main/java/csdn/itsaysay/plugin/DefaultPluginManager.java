@@ -105,7 +105,7 @@ public class DefaultPluginManager implements PluginManager {
 	private Set<PluginInfo> handleProdPlugin(Path path) {
 		Set<PluginInfo> pluginInfoList = new HashSet<>();
 		//获取jar包列表
-		List<File> jarFiles =  FileUtil.loopFiles(path.toString(), file -> file.getName().endsWith(PluginConstants.REPACKAGE + PluginConstants.JAR_SUFFIX));
+		List<File> jarFiles =  FileUtil.loopFiles(path, 1,  file -> file.getName().endsWith(PluginConstants.REPACKAGE + PluginConstants.JAR_SUFFIX));
 		for (File jarFile : jarFiles) {
 			//读取配置
 			try(JarFileArchive archive = new JarFileArchive(jarFile)) {
