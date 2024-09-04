@@ -22,7 +22,7 @@
         <dependency>
             <groupId>csdn.itsaysay.plugin</groupId>
             <artifactId>spring-hot-plugin-demo</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -31,6 +31,12 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>2.0.39</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.5.7</version>
         </dependency>
 
         <!--这个包是海康sdk里面的，手动上传到了maven仓库，需要自己安装-->
