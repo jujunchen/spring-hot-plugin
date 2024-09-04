@@ -1,16 +1,12 @@
 package csdn.itsaysay.plugin.mybatis;
 
 import cn.hutool.core.util.ReflectUtil;
-import com.baomidou.mybatisplus.core.MybatisConfiguration;
-import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
-import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import csdn.itsaysay.plugin.PluginAutoConfiguration;
 import csdn.itsaysay.plugin.PluginInfo;
 import csdn.itsaysay.plugin.register.AbstractRegister;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
@@ -54,12 +50,11 @@ public class RegisterMybatis extends AbstractRegister {
     }
 
     private void setMPConfiguration() {
-        DefaultSqlSessionFactory sqlSessionFactory = (DefaultSqlSessionFactory) main.getBean("sqlSessionFactory");
-        Configuration configuration = sqlSessionFactory.getConfiguration();
-        if (configuration instanceof MybatisConfiguration) {
-            MybatisConfiguration mpConfiguration = (MybatisConfiguration) configuration;
-            //关闭mappedStatement的短key缓存生成
-            mpConfiguration.setUseGeneratedShortKey(false);
+        if (main.containsBean("mybatisPlusUtil")) {
+            MybatisPlusUtil mybatisPlusUtil = (MybatisPlusUtil) main.getBean("mybatisPlusUtil");
+            DefaultSqlSessionFactory sqlSessionFactory = (DefaultSqlSessionFactory) main.getBean("sqlSessionFactory");
+            Configuration configuration = sqlSessionFactory.getConfiguration();
+            mybatisPlusUtil.setMPConfiguration(configuration);
         }
     }
 
@@ -88,29 +83,20 @@ public class RegisterMybatis extends AbstractRegister {
     public void unRegister(ApplicationContext plugin, PluginInfo pluginInfo) {
         DefaultSqlSessionFactory sqlSessionFactory = (DefaultSqlSessionFactory) main.getBean("sqlSessionFactory");
         Configuration configuration = sqlSessionFactory.getConfiguration();
-        //处理使用MP时候的引用
-        if (configuration instanceof MybatisConfiguration) {
-            MybatisConfiguration mpConfiguration = (MybatisConfiguration) configuration;
+        //使用MybatisPlus的时候
+        if (main.containsBean("mybatisPlusUtil")) {
+            MybatisPlusUtil mybatisPlusUtil = (MybatisPlusUtil) main.getBean("mybatisPlusUtil");
+            mybatisPlusUtil.clearMPQuote(configuration, plugin);
+        } else {
+            MapperRegistry mapperRegistry = configuration.getMapperRegistry();
             //当前插件加载的mapper
             Map<String, MapperFactoryBean> mapperFactoryBeanMap = plugin.getBeansOfType(MapperFactoryBean.class);
             for (MapperFactoryBean mapperFactoryBean : mapperFactoryBeanMap.values()) {
                 Class<?> mapper = mapperFactoryBean.getMapperInterface();
-                //清除MP没有清除掉的引用缓存
-                Class<?> modelClass = ReflectionKit.getSuperClassGenericType(mapper, com.baomidou.mybatisplus.core.mapper.Mapper.class, 0);
-                TableInfo tableInfo = TableInfoHelper.getTableInfo(modelClass);
-                //null 表示已经清理过
-                if (tableInfo != null) {
-                    //清除Model 的Class引用缓存
-                    ((Map)ReflectUtil.getFieldValue(mpConfiguration.getReflectorFactory(), "reflectorMap")).remove(modelClass);
-                    ((Map)ReflectUtil.getFieldValue(ReflectionKit.class, "CLASS_FIELD_CACHE")).remove(modelClass);
-                    ((Map)ReflectUtil.getFieldValue(TableInfoHelper.class, "TABLE_NAME_INFO_CACHE")).remove(tableInfo.getTableName());
-                }
-                //删除类型转换处理器中的引用
-                ((Map)ReflectUtil.getFieldValue(configuration.getTypeHandlerRegistry(), "typeHandlerMap")).remove(modelClass);
-                mpConfiguration.removeMapper(mapper);
+                ((Map)ReflectUtil.getFieldValue(mapperRegistry, "knownMappers")).remove(mapper);
             }
-            SqlHelper.FACTORY = null;
         }
+
         //其他
         //取消默认加载器
         Resources.setDefaultClassLoader(null);
