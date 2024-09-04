@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.mybatis.spring.mapper.MapperFactoryBean;
@@ -88,18 +90,50 @@ public class RegisterMybatis extends AbstractRegister {
             MybatisPlusUtil mybatisPlusUtil = (MybatisPlusUtil) main.getBean("mybatisPlusUtil");
             mybatisPlusUtil.clearMPQuote(configuration, plugin);
         } else {
-            MapperRegistry mapperRegistry = configuration.getMapperRegistry();
-            //当前插件加载的mapper
-            Map<String, MapperFactoryBean> mapperFactoryBeanMap = plugin.getBeansOfType(MapperFactoryBean.class);
-            for (MapperFactoryBean mapperFactoryBean : mapperFactoryBeanMap.values()) {
-                Class<?> mapper = mapperFactoryBean.getMapperInterface();
-                ((Map)ReflectUtil.getFieldValue(mapperRegistry, "knownMappers")).remove(mapper);
-            }
+            clearMybatis(configuration, plugin);
         }
-
         //其他
         //取消默认加载器
         Resources.setDefaultClassLoader(null);
+    }
+
+    private void clearMybatis(Configuration configuration, ApplicationContext plugin) {
+        Map<String, MappedStatement> mappedStatements =  ((Map) ReflectUtil.getFieldValue(configuration, "mappedStatements"));
+        Map<String, ResultMap> resultMaps = ((Map)ReflectUtil.getFieldValue(configuration, "resultMaps"));
+        MapperRegistry mapperRegistry = configuration.getMapperRegistry();
+        //清空当前插件加载的mapper相关缓存
+        Map<String, MapperFactoryBean> mapperFactoryBeanMap = plugin.getBeansOfType(MapperFactoryBean.class);
+        for (MapperFactoryBean mapperFactoryBean : mapperFactoryBeanMap.values()) {
+            Class<?> mapper = mapperFactoryBean.getMapperInterface();
+            ((Map)ReflectUtil.getFieldValue(mapperRegistry, "knownMappers")).remove(mapper);
+
+            // 清空 Mapper 方法 mappedStatement 缓存信息
+            final String typeKey = mapper.getName();
+            Set<String> mapperSet = mappedStatements.keySet().stream().filter(ms -> ms.startsWith(typeKey)).collect(Collectors.toSet());
+            if (!mapperSet.isEmpty()) {
+                mapperSet.forEach(mappedStatements::remove);
+            }
+            //删除resultMaps中的数据
+            Set<String> resultMapSet = resultMaps.keySet().stream().filter(ms -> ms.startsWith(typeKey)).collect(Collectors.toSet());
+            if (!resultMapSet.isEmpty()) {
+                resultMapSet.forEach(resultMaps::remove);
+            }
+
+            //重置资源加载标识
+            Set<String> loadedResources = ((Set)ReflectUtil.getFieldValue(configuration, "loadedResources"));
+            String xmlResource = getXmlResource(mapper.getName());
+            loadedResources.remove(xmlResource);
+            loadedResources.remove(mapper.toString());
+        }
+    }
+
+    private String getXmlResource(String name) {
+       return name.replace('.', '/') + ".xml";
+    }
+
+    private String getShortName(String key) {
+        final String[] keyParts = key.split("\\.");
+        return keyParts[keyParts.length - 1];
     }
 
 
