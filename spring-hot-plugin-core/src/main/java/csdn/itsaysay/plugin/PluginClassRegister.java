@@ -11,6 +11,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.ProtectionDomain;
 import java.util.Map;
 import java.util.Vector;
 
@@ -44,15 +45,35 @@ public class PluginClassRegister {
 		AnnotationConfigApplicationContext pluginApplicationContext = (AnnotationConfigApplicationContext) pluginBeans.get(pluginInfo.getId());
 		//取消注册
 		applyUnRegister(pluginApplicationContext, pluginInfo);
-		LaunchedURLClassLoader launchedURLClassLoader = ((LaunchedURLClassLoader)pluginApplicationContext.getClassLoader());
-		((Vector)ReflectUtil.getFieldValue(launchedURLClassLoader, "classes")).clear();
-		launchedURLClassLoader.close();
-		pluginApplicationContext.setClassLoader(null);
-		pluginApplicationContext.close();
+		clearClassLoader(pluginApplicationContext);
+		clearApplicationContext(pluginApplicationContext);
 		pluginBeans.remove(pluginInfo.getId());
 		//及时回收掉
 		System.gc();
 		return true;
+	}
+
+	/**
+	 * 清理applicationContext
+	 * @param pluginApplicationContext
+	 */
+	private void clearApplicationContext(AnnotationConfigApplicationContext pluginApplicationContext) {
+		pluginApplicationContext.setClassLoader(null);
+		pluginApplicationContext.close();
+	}
+
+	/**
+	 * 清理classLoader
+	 * @param pluginApplicationContext
+	 */
+	private void clearClassLoader(AnnotationConfigApplicationContext pluginApplicationContext) {
+		LaunchedURLClassLoader launchedURLClassLoader = ((LaunchedURLClassLoader)pluginApplicationContext.getClassLoader());
+		ProtectionDomain protectionDomain = ((ProtectionDomain) ReflectUtil.getFieldValue(launchedURLClassLoader, "defaultDomain"));
+		ReflectUtil.setFieldValue(protectionDomain, "classloader", null);
+		((Map)ReflectUtil.getFieldValue(launchedURLClassLoader, "packages")).clear();
+		((Map)ReflectUtil.getFieldValue(launchedURLClassLoader, "pdcache")).clear();
+		((Vector)ReflectUtil.getFieldValue(launchedURLClassLoader, "classes")).clear();
+		launchedURLClassLoader.close();
 	}
 
 	private ApplicationContext registerBean(PluginInfo pluginInfo) {

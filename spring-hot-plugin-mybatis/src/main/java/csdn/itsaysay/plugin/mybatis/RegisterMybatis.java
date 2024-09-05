@@ -111,12 +111,22 @@ public class RegisterMybatis extends AbstractRegister {
             final String typeKey = mapper.getName();
             Set<String> mapperSet = mappedStatements.keySet().stream().filter(ms -> ms.startsWith(typeKey)).collect(Collectors.toSet());
             if (!mapperSet.isEmpty()) {
-                mapperSet.forEach(mappedStatements::remove);
+                mapperSet.forEach(item -> {
+                    //清空全限定名
+                    mappedStatements.remove(item);
+                    //清空短key
+                    mappedStatements.remove(getShortName(item));
+                });
             }
             //删除resultMaps中的数据
             Set<String> resultMapSet = resultMaps.keySet().stream().filter(ms -> ms.startsWith(typeKey)).collect(Collectors.toSet());
             if (!resultMapSet.isEmpty()) {
-                resultMapSet.forEach(resultMaps::remove);
+                resultMapSet.forEach(item -> {
+                    //清空全限定名
+                    resultMaps.remove(item);
+                    //清空短key
+                    resultMaps.remove(getShortName(item));
+                });
             }
 
             //重置资源加载标识
