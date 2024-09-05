@@ -21,8 +21,25 @@ spring:
     username: sa
     password:
 
+  # admin
+  boot:
+    admin:
+      client:
+        url: http://localhost:8081
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    env:
+      enabled: true
+
+
 # 开启调式日志
 logging:
+  file:
+    name: logs/spring-hot-plugin-demo.log
   level:
     csdn.itsaysay.plugin: DEBUG
 
