@@ -1,5 +1,6 @@
 package csdn.itsaysay.plugin;
 
+import csdn.itsaysay.plugin.register.ClearLoggerCache;
 import csdn.itsaysay.plugin.register.RegisterController;
 import csdn.itsaysay.plugin.register.RegisterScheduled;
 import org.springframework.context.ApplicationContext;
@@ -24,6 +25,11 @@ public class PluginConfiguration {
     @Bean
     public RegisterScheduled createRegisterScheduled(ApplicationContext main) {
         return new RegisterScheduled(main);
+    }
+
+    @Bean
+    public ClearLoggerCache createClearLoggerCache(ApplicationContext main) {
+        return new ClearLoggerCache(main);
     }
 
 }
