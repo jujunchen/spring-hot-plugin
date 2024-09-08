@@ -33,10 +33,7 @@ public class ClearLoggerCache extends AbstractRegister {
             ILoggerFactory iLoggerFactory = LoggerFactory.getILoggerFactory();
             if (iLoggerFactory instanceof LoggerContext) {
                 LoggerContext loggerContext = (LoggerContext) iLoggerFactory;
-                if (loggerCache == null) {
-                    loggerCache = (Map<String, Logger>) ReflectUtil.getFieldValue(loggerContext, "loggerCache");
-                }
-
+                loggerCache = (Map<String, Logger>) ReflectUtil.getFieldValue(loggerContext, "loggerCache");
                 clearLoggerCache(pluginInfo);
             }
         } catch (Exception ex) {
@@ -58,7 +55,16 @@ public class ClearLoggerCache extends AbstractRegister {
             }
         }
 
-        keysToRemove.forEach(loggerCache::remove);
+        for (String key : keysToRemove) {
+            Logger logger = loggerCache.get(key);
+            //从父级开始删除本身引用，删除后，类实例化的时候会重新创建
+            Logger parent = (Logger) ReflectUtil.getFieldValue(logger, "parent");
+            List<Logger> childrenList = (List)ReflectUtil.getFieldValue(parent, "childrenList");
+            if (CollUtil.isNotEmpty(childrenList)) {
+                childrenList.remove(logger);
+            }
+            loggerCache.remove(key);
+        }
     }
 
     /**
