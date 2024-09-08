@@ -37,14 +37,12 @@ Spring 插件化开发框架
 稳：稳定，兼容性强
 
 ## 支持特性
-v1.1(开发中)
-- 支持插件引用主程序Spring Bean
-- 插件代码与主程序代码隔离
-- 支持热加载普通类、各类Spring Bean
-- 支持热加载Controller控制器
-- 支持热加载定时任务
+v1.2(开发中)
+- 支持分布式部署
+- 支持freemarker模板引擎
+
+v1.1
 - 支持插件中使用第三方依赖,jar、dll文件
-- 支持主程序监听插件启动卸载事件
 - 支持Mybatis、MybatisPlus
 
 v1.0
@@ -63,24 +61,52 @@ v1.0
 基于Spring的 applicationContext 和 classLoader 对插件中的类进行热加载，卸载的时候尽可能的销毁引用，避免内存泄露。
 
 ## 安装教程
-> 目前项目还在开发中，插件核心包暂未发布到maven仓库，请下载源码构建
+- spring-hot-plugin-common 插件公共包
+- spring-hot-plugin-core 插件核心包
+- spring-hot-plugin-loader 插件依赖加载包
+- spring-hot-plugin-maven 插件maven打包工具
+- spring-hot-plugin-mybatis 插件mybatis依赖包
+- spring-hot-plugin-example 插件示例项目
+
+### Maven 安装
+#### 使用controller、定时任务、第三方依赖
+```xml
+<!--引入插件核心包-->
+<dependency>
+    <groupId>vip.aliali.spring</groupId>
+    <artifactId>spring-hot-plugin-core</artifactId>
+    <version>${lastVersion}</version>
+</dependency>
+```
+#### 使用mybatis、mybatis-plus
+```xml
+<!--引入mybatis依赖包-->
+<dependency>
+    <groupId>vip.aliali.spring</groupId>
+    <artifactId>spring-hot-plugin-mybatis</artifactId>
+    <version>${lastVersion}</version>
+</dependency>
+```
+
 
 ### 源码构建
 1. git clone 本项目
 2. IDEA导入项目，根目录运行 mvn clean install(或者上传到私服)
-3. 主程序中引入依赖，修改版本为最新版本
+3. 主程序中引入插件核心包，修改版本为最新版本
 ```xml
-<!--引入插件包-->
+<!--引入插件核心包-->
 <dependency>
     <groupId>csdn.itsaysay.plugin</groupId>
     <artifactId>spring-hot-plugin-core</artifactId>
     <version>${lastVersion}</version>
 </dependency>
 ```
+4. 其他按需引入依赖
 
 
 ### 使用说明
-1. 在你的主程序中，参考`spring-hot-plugin-demo`项目创建一个安装插件的接口
+1. 在主程序pom.xml中引入插件依赖
+1. 在主程序中，参考`spring-hot-plugin-demo`项目创建一个安装插件的接口
 2. 配置插件
 ```yml
 plugin:
