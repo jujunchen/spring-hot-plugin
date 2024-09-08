@@ -6,7 +6,7 @@ server:
 spring:
   servlet:
     multipart:
-      max-file-size: 50MB
+      max-file-size: 100MB
       max-request-size: 100MB
   application:
     name: spring-hot-plugin-demo

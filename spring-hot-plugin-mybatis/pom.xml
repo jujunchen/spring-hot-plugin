@@ -6,10 +6,11 @@
     <parent>
         <groupId>vip.aliali.spring</groupId>
         <artifactId>spring-hot-plugin-parent</artifactId>
-        <version>1.1</version>
+        <version>1.1.1</version>
     </parent>
 
     <artifactId>spring-hot-plugin-mybatis</artifactId>
+    <description>插件Mybatis、MybatisPlus组件</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
