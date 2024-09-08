@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  csdn.itsaysay.plugin.PluginStarter
+  vip.aliali.spring.plugin.PluginStarter

@@ -1,6 +1,6 @@
-import csdn.itsaysay.plugin.loader.JarLauncher;
-import csdn.itsaysay.plugin.loader.archive.Archive;
-import csdn.itsaysay.plugin.loader.archive.JarFileArchive;
+import vip.aliali.spring.plugin.loader.JarLauncher;
+import vip.aliali.spring.plugin.loader.archive.Archive;
+import vip.aliali.spring.plugin.loader.archive.JarFileArchive;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

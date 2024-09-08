@@ -51,7 +51,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>csdn.itsaysay.plugin</groupId>
+                <groupId>vip.aliali.spring</groupId>
                 <artifactId>spring-hot-plugin-maven</artifactId>
                 <version>${project.version}</version>
                 <executions>

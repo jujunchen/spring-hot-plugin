@@ -49,6 +49,14 @@
         </dependencies>
     </dependencyManagement>
 
+    <repositories>
+        <repository>
+            <id>aliyun-repository</id>
+            <name>aliyun nexus</name>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+
 
     <build>
     </build>

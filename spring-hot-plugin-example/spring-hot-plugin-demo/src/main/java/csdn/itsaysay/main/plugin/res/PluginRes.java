@@ -1,6 +1,6 @@
 package csdn.itsaysay.main.plugin.res;
 
-import csdn.itsaysay.plugin.constants.PluginState;
+import vip.aliali.spring.plugin.constants.PluginState;
 import lombok.Data;
 
 @Data

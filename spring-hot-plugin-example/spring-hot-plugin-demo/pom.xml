@@ -53,13 +53,13 @@
 
         <!--引入插件包-->
         <dependency>
-            <groupId>csdn.itsaysay.plugin</groupId>
+            <groupId>vip.aliali.spring</groupId>
             <artifactId>spring-hot-plugin-core</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>csdn.itsaysay.plugin</groupId>
+            <groupId>vip.aliali.spring</groupId>
             <artifactId>spring-hot-plugin-mybatis</artifactId>
             <version>${project.version}</version>
         </dependency>

@@ -8,10 +8,12 @@
 <!--      <version>7</version>-->
 <!--    </parent>-->
 
-    <groupId>csdn.itsaysay.plugin</groupId>
+    <groupId>vip.aliali.spring</groupId>
     <artifactId>spring-hot-plugin-parent</artifactId>
     <version>1.1</version>
     <packaging>pom</packaging>
+    <description>基于Spring的插件化开发框架</description>
+    <url>https://github.com/jujunchen/spring-hot-plugin</url>
 
     <modules>
       <module>spring-hot-plugin-core</module>
@@ -30,6 +32,7 @@
       <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
       <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
       <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+      <maven-javadoc-plugin.version>3.1.0</maven-javadoc-plugin.version>
 
       <lombok.version>1.18.20</lombok.version>
       <springboot.version>2.7.18</springboot.version>
@@ -39,34 +42,29 @@
       <hutool.version>5.8.4</hutool.version>
     </properties>
 
-<!--    <licenses>-->
-<!--      <license>-->
-<!--        <name>The Apache Software License, Version 2.0</name>-->
-<!--        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>-->
-<!--        <distribution>repo</distribution>-->
-<!--      </license>-->
-<!--    </licenses>-->
+    <licenses>
+      <license>
+        <name>The Apache Software License, Version 2.0</name>
+        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        <distribution>repo</distribution>
+      </license>
+    </licenses>
 
-<!--    <scm>-->
-<!--      <url>https://gitee.com/itsaysay/spring-hot-plugin</url>-->
-<!--      <connection>scm:https://gitee.com/itsaysay/spring-hot-plugin.git</connection>-->
-<!--      <developerConnection>scm:https://gitee.com/itsaysay/spring-hot-plugin.git</developerConnection>-->
-<!--      <tag>1.0</tag>-->
-<!--    </scm>-->
+    <scm>
+      <url>https://github.com/jujunchen/spring-hot-plugin</url>
+      <connection>scm:https://github.com/jujunchen/spring-hot-plugin.git</connection>
+      <developerConnection>scm:https://github.com/jujunchen/spring-hot-plugin.git</developerConnection>
+      <tag>1.0</tag>
+    </scm>
 
+    <developers>
+      <developer>
+        <name>itsaysay</name>
+        <email>chenjujun@aliali.vip</email>
+        <url>https://itsaysay.blog.csdn.net/</url>
+      </developer>
+    </developers>
 
-<!--    <distributionManagement>-->
-<!--      <snapshotRepository>-->
-<!--        <id>sonatype-nexus-snapshots</id>-->
-<!--        <name>oss Snapshots Repository</name>-->
-<!--        <url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
-<!--      </snapshotRepository>-->
-<!--      <repository>-->
-<!--        <id>sonatype-nexus-staging</id>-->
-<!--        <name>oss Staging Repository</name>-->
-<!--        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-<!--      </repository>-->
-<!--    </distributionManagement>-->
 
   <repositories>
     <repository>
@@ -75,14 +73,6 @@
       <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
     </repository>
   </repositories>
-
-<!--    <developers>-->
-<!--      <developer>-->
-<!--        <name>itsaysay</name>-->
-<!--        <email>chenjujun@aliali.vip</email>-->
-<!--        <url>https://itsaysay.blog.csdn.net/</url>-->
-<!--      </developer>-->
-<!--    </developers>-->
 
     <dependencies>
 
@@ -137,58 +127,60 @@
           </configuration>
         </plugin>
 
-<!--        <plugin>-->
-<!--          <groupId>org.apache.maven.plugins</groupId>-->
-<!--          <artifactId>maven-source-plugin</artifactId>-->
-<!--          <version>${maven-source-plugin.version}</version>-->
-<!--          <executions>-->
-<!--            <execution>-->
-<!--              <phase>package</phase>-->
-<!--              <goals>-->
-<!--                <goal>jar-no-fork</goal>-->
-<!--              </goals>-->
-<!--            </execution>-->
-<!--          </executions>-->
-<!--        </plugin>-->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${maven-source-plugin.version}</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>jar-no-fork</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
 
-<!--        <plugin>-->
-<!--          <groupId>org.apache.maven.plugins</groupId>-->
-<!--          <artifactId>maven-gpg-plugin</artifactId>-->
-<!--          <version>${maven-gpg-plugin.version}</version>-->
-<!--          <configuration>-->
-<!--            <skip>${plugin.skip}</skip>-->
-<!--          </configuration>-->
-<!--          <executions>-->
-<!--            <execution>-->
-<!--              <id>sign-artifacts</id>-->
-<!--              <phase>verify</phase>-->
-<!--              <goals>-->
-<!--                <goal>sign</goal>-->
-<!--              </goals>-->
-<!--            </execution>-->
-<!--          </executions>-->
-<!--        </plugin>-->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${maven-javadoc-plugin.version}</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>${maven-gpg-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>sign-artifacts</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>sign</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <version>0.5.0</version>
+          <extensions>true</extensions>
+          <configuration>
+            <publishingServerId>central</publishingServerId>
+          </configuration>
+        </plugin>
 
       </plugins>
     </build>
-
-<!--    <profiles>-->
-<!--      <profile>-->
-<!--        <id>dev</id>-->
-<!--        <activation>-->
-<!--          <activeByDefault>true</activeByDefault>-->
-<!--        </activation>-->
-<!--        <properties>-->
-<!--          <plugin.skip>true</plugin.skip>-->
-<!--        </properties>-->
-<!--      </profile>-->
-
-<!--      <profile>-->
-<!--        <id>release</id>-->
-<!--        <properties>-->
-<!--          <plugin.skip>false</plugin.skip>-->
-<!--        </properties>-->
-<!--      </profile>-->
-<!--    </profiles>-->
 
 </project>

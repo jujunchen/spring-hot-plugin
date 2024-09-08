@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  csdn.itsaysay.plugin.mybatis.MybatisPluginConfiguration
+  vip.aliali.spring.plugin.mybatis.MybatisPluginConfiguration
