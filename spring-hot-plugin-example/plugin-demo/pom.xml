@@ -37,6 +37,7 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.5.7</version>
+            <scope>provided</scope>
         </dependency>
 
         <!--这个包是海康sdk里面的，手动上传到了maven仓库，需要自己安装-->

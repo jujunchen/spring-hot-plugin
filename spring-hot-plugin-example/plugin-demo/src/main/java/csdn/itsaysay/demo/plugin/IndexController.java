@@ -46,12 +46,12 @@ public class IndexController {
         return true;
     }
 
-    @GetMapping("/mybatis/getUser/{id}")
+    @GetMapping("/mp/getUser/{id}")
     public User getUser(@PathVariable("id") Integer id) {
         return testService.getUser(id);
     }
 
-    @GetMapping("/mybatis/getUserXml/{id}")
+    @GetMapping("/mp/getUserXml/{id}")
     public User getUserXml(@PathVariable("id") Integer id) {
         return testService.getUserXml(id);
     }
