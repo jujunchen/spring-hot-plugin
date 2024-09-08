@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MybatisPluginConfiguration {
 
-    @Bean
+    @Bean("registerMybatis")
     @ConditionalOnClass(name = "org.apache.ibatis.session.SqlSession")
     public RegisterMybatis createRegisterMybatis(ApplicationContext main) {
         return new RegisterMybatis(main);
@@ -18,9 +18,9 @@ public class MybatisPluginConfiguration {
      * 用来处理MybatisPlus
      * @return MybatisPlus的处理工具
      */
-    @Bean
-    @ConditionalOnClass(name = "com.baomidou.mybatisplus.core.MybatisConfiguration")
-    public MybatisPlusUtil createMybatisPluginAutoConfiguration() {
+    @Bean("mybatisPlusUtil")
+    @ConditionalOnClass(name = "com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration")
+    public MybatisPlusUtil createMybatisPluginUtil() {
         return new MybatisPlusUtil();
     }
 }
