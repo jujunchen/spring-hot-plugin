@@ -41,7 +41,7 @@ v1.2(开发中)
 - 支持分布式部署
 - 支持freemarker模板引擎
 
-v1.1
+v1.1.1
 - 支持插件中使用第三方依赖,jar、dll文件
 - 支持Mybatis、MybatisPlus
 
