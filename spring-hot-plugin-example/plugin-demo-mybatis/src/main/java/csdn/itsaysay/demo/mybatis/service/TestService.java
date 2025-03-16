@@ -6,4 +6,8 @@ public interface TestService {
     User getUser(Integer id);
 
     User getUserXml(Integer id);
+
+    Integer insert();
+
+    void delete(Integer id);
 }

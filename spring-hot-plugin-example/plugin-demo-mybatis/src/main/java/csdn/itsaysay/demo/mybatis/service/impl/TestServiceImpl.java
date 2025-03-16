@@ -22,4 +22,18 @@ public class TestServiceImpl implements TestService {
     public User getUserXml(Integer id) {
         return testMapper.selectByIdXml(id);
     }
+
+    @Override
+    public Integer insert() {
+        User user = new User();
+        user.setName("test");
+        user.setAge(18);
+        testMapper.insert(user);
+        return  user.getId();
+    }
+
+    @Override
+    public void delete(Integer id) {
+        testMapper.deleteById(id);
+    }
 }
