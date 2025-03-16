@@ -1,10 +1,9 @@
-
 <div align="center">
 <span style="font-size: 30px;font-weight:bold">
-Spring 插件化开发框架
+Spring Plugin Development Framework
 </span>
   
-[🤔Reporting Issues][Issues-url]   [📘English Documentation][english-url]
+[🤔Reporting Issues][Issues-url]   [📘中文][chinese-url]
 
 [![license][license-image]][license-url]
 [![build][build-image]][build-url]
@@ -23,115 +22,129 @@ Spring 插件化开发框架
 [jdk-url]: https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html
 [hutool-url]: https://github.com/dromara/hutool
 [Issues-url]: https://github.com/jujunchen/spring-hot-plugin/issues
-[english-url]: README.en.md
+[chinese-url]: README.zh-cn.md
 
-## 介绍
-基于Spring 的插件化开发框架，轻、快、易、稳，无需暴露核心模块代码，降低代码耦合，热加载动态更新，提高开发效率。
+## Introduction
+A lightweight, fast, easy, and stable Spring-based plugin development framework. It does not require exposing core module code, reduces code coupling, supports hot reloading for dynamic updates, and improves development efficiency.
 
-轻：轻量
+Lightweight: Lightweight
 
-快：启动速度快
+Fast: Fast startup
 
-易：使用简单，原生spring编程
+Easy: Easy to use, native Spring programming
 
-稳：稳定，兼容性强
+Stable: Stable, strong compatibility
 
-## 支持特性
-v1.2(开发中)
-- 支持分布式部署
-- 支持freemarker模板引擎
+## Supported Features
+v1.2 (Under Development)
+- Support for distributed deployment
+- Support for Freemarker template engine
 
 v1.1.1
-- 支持插件中使用第三方依赖,jar、dll文件
-- 支持Mybatis、MybatisPlus
+- Support for using third-party dependencies in plugins, including jar and dll files
+- Support for MyBatis and MyBatisPlus
 
 v1.0
-- 支持子类引用父类Spring Bean
-- 插件代码与主程序代码隔离
-- 支持热加载普通类、各类Spring Bean
-- 支持热加载Controller控制器
-- 支持热加载定时任务
-- 支持插件中使用第三方依赖
-- 支持主程序监听插件启动卸载事件
+- Support for subclasses referencing parent Spring Beans
+- Isolation of plugin code from main program code
+- Support for hot reloading of ordinary classes and various Spring Beans
+- Support for hot reloading of Controller controllers
+- Support for hot reloading of scheduled tasks
+- Support for using third-party dependencies in plugins
+- Support for the main program to listen to plugin startup and uninstallation events
 
-## 原理
+## Principle
 
-![架构图](./images/architecture.png)
+![Architecture Diagram](./images/architecture.png)
 
-基于Spring的 applicationContext 和 classLoader 对插件中的类进行热加载，卸载的时候尽可能的销毁引用，避免内存泄露。
+Based on Spring's applicationContext and classLoader, hot reloading of classes in plugins is performed. During uninstallation, efforts are made to cut off GC ROOTs to avoid memory leaks.
 
-## 安装教程
-- spring-hot-plugin-common 插件公共包
-- spring-hot-plugin-core 插件核心包
-- spring-hot-plugin-loader 插件依赖加载包
-- spring-hot-plugin-maven 插件maven打包工具
-- spring-hot-plugin-mybatis 插件mybatis依赖包
-- spring-hot-plugin-example 插件示例项目
+## Installation Guide
+- spring-hot-plugin-common: Plugin common package
+- spring-hot-plugin-core: Plugin core package
+- spring-hot-plugin-loader: Plugin dependency loading package
+- spring-hot-plugin-maven: Plugin Maven packaging tool
+- spring-hot-plugin-mybatis: Plugin MyBatis dependency package
+- spring-hot-plugin-example: Plugin example project
 
-### Maven 安装
-#### 使用controller、定时任务、第三方依赖
+### Maven Installation
+#### Using controller, scheduled tasks, third-party dependencies
 ```xml
-<!--引入插件核心包-->
-<dependency>
-    <groupId>vip.aliali.spring</groupId>
-    <artifactId>spring-hot-plugin-core</artifactId>
-    <version>${lastVersion}</version>
+<!--Introduce plugin core package-->
+<dependency> 
+    <groupId>vip.aliali.spring</groupId> 
+    <artifactId>spring-hot-plugin-core</artifactId> 
+    <version>${lastVersion}</version> 
 </dependency>
 ```
-#### 使用mybatis、mybatis-plus
+#### Using Mybatis, Mybatis-plus
 ```xml
-<!--引入mybatis依赖包-->
-<dependency>
-    <groupId>vip.aliali.spring</groupId>
-    <artifactId>spring-hot-plugin-mybatis</artifactId>
-    <version>${lastVersion}</version>
+<!--Introduce mybatis dependency package-->
+<dependency> 
+    <groupId>vip.aliali.spring</groupId> 
+    <artifactId>spring-hot-plugin-mybatis</artifactId> 
+    <version>${lastVersion}</version> 
+</dependency>
+```
+### Source Code Build
+1. git clone this project
+2. Import the project in IDEA, run `mvn clean install` in the root directory (or upload to a private repository)
+3. Introduce the plugin core package in the main program, modify the version to the latest version
+
+```xml
+<!--Introduce plugin core package-->
+<dependency> 
+    <groupId>csdn.itsaysay.plugin</groupId> 
+    <artifactId>spring-hot-plugin-core</artifactId> 
+    <version>${lastVersion}</version> 
 </dependency>
 ```
 
+4. Introduce other dependencies as needed
 
-### 源码构建
-1. git clone 本项目
-2. IDEA导入项目，根目录运行 mvn clean install(或者上传到私服)
-3. 主程序中引入插件核心包，修改版本为最新版本
-```xml
-<!--引入插件核心包-->
-<dependency>
-    <groupId>csdn.itsaysay.plugin</groupId>
-    <artifactId>spring-hot-plugin-core</artifactId>
-    <version>${lastVersion}</version>
-</dependency>
-```
-4. 其他按需引入依赖
+### Usage Instructions
+1. Introduce plugin dependencies in the main program's pom.xml
+2. In the main program, refer to the `spring-hot-plugin-demo` project to create an interface for installing plugins
+3. Configure the plugin
 
-
-### 使用说明
-1. 在主程序pom.xml中引入插件依赖
-1. 在主程序中，参考`spring-hot-plugin-demo`项目创建一个安装插件的接口
-2. 配置插件
 ```yml
 plugin:
-  #是否启用插件功能
+  #Whether to enable plugin functionality
   enable:
-  #运行模式，开发环境: dev，生产环境: prod
+  #Run mode, development environment: dev, production environment: prod
   runMode:
-  #在卸载插件后, 备份插件的目录
+  #Backup directory after uninstalling the plugin
   backupPath:
-  #插件的路径，如果插件路径下存在插件会自动加载
+  #Plugin path, if the plugin path exists, it will be automatically loaded
   pluginPath:
-  #扫描的包路径
+  #Package path to scan
   basePackage:
 ```
-3. 插件开发
->- 参考`plugin-demo`，将主程序以`<scope>provided</scope>`的生命周期引入maven，这样就可以在插件中引用主程序的Bean。
->其他就如同平时开发方式一样
->-  打包工具，同样参考plugin-demo 的 pom文件配置 `spring-hot-plugin-maven`
-4. 安装插件
-- 通过前面创建的接口进行`动态`安装，选择`-repackage`结尾的jar包（**推荐**）
-- 直接放入插件安装目录，需要重启主程序
+4. Plugin Development
+>- Refer to `plugin-demo`, introduce the main program with `<scope>provided</scope>` lifecycle in Maven, so that the plugin can reference the main program's Beans.
+   >Other development methods are the same as usual
+>- Packaging tool, refer to the pom file configuration of `plugin-demo` for `spring-hot-plugin-maven`
+5. Install Plugin
+- Perform `dynamic` installation through the previously created interface, select the jar package with `-repackage` suffix (**Recommended**)
+- Directly place it in the plugin installation directory, requires restarting the main program
 
-## 参与贡献
+## Performance Test
+Test Case:
+Simulate frequent plugin installation, uninstallation, and data operations to observe memory consumption.
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+Docker container maximum memory: 256MB
+
+1. Install plugin-demo-mybatis plugin
+2. Add data
+3. Query data
+4. Delete data
+5. Uninstall plugin-demo-mybatis plugin
+
+![img.png](images/docker-img.png)
+
+## Contribution
+
+1. Fork this repository
+2. Create a new Feat_xxx branch
+3. Submit code
+4. Create a Pull Request
