@@ -13,6 +13,7 @@
         <module>plugin-demo-2</module>
         <module>plugin-demo-mybatis</module>
         <module>spring-hot-plugin-admin</module>
+        <module>spring-hot-plugin-task-demo</module>
     </modules>
 
     <properties>
