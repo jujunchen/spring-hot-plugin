@@ -4,7 +4,7 @@
 
     <groupId>vip.aliali.spring</groupId>
     <artifactId>spring-hot-plugin-parent</artifactId>
-    <version>1.1.1</version>
+    <version>1.2</version>
     <packaging>pom</packaging>
     <description>基于Spring的插件化开发框架</description>
     <url>https://github.com/jujunchen/spring-hot-plugin</url>
@@ -15,6 +15,7 @@
       <module>spring-hot-plugin-loader</module>
       <module>spring-hot-plugin-maven</module>
       <module>spring-hot-plugin-mybatis</module>
+      <module>spring-hot-plugin-distributed</module>
     </modules>
 
     <properties>

@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  vip.aliali.spring.plugin.mybatis.MybatisPluginConfiguration

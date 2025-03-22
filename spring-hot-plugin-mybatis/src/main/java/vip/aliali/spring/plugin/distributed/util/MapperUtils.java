@@ -1,4 +1,4 @@
-package vip.aliali.spring.plugin.mybatis.util;
+package vip.aliali.spring.plugin.distributed.util;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.CharSequenceUtil;

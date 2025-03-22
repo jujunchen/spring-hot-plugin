@@ -87,6 +87,15 @@ v1.0
     <version>${lastVersion}</version>
 </dependency>
 ```
+#### 分布式微服务支持
+```xml
+<!--引入分布式依赖包-->
+<dependency>
+    <groupId>vip.aliali.spring</groupId>
+    <artifactId>spring-hot-plugin-distributed</artifactId>
+    <version>${lastVersion}</version>
+</dependency>
+```
 
 
 ### 源码构建
