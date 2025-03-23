@@ -89,7 +89,7 @@ public class DefaultPluginManager implements PluginManager {
 	    return pluginInfoList;
 	}
 
-	private Set<PluginInfo> buildPluginInfo(Path path) throws Exception {
+	protected Set<PluginInfo> buildPluginInfo(Path path) throws Exception {
 		//开发环境
 		if (RuntimeMode.DEV == pluginAutoConfiguration.environment()) {
 			return handleDevPlugin(path);
@@ -190,7 +190,7 @@ public class DefaultPluginManager implements PluginManager {
 		}
 	}
 
-	private void start(PluginInfo pluginInfo) {
+	protected void start(PluginInfo pluginInfo) {
 		try {
 			pluginClassRegister.register(pluginInfo);
 			pluginInfo.setPluginState(PluginState.STARTED);
@@ -247,7 +247,7 @@ public class DefaultPluginManager implements PluginManager {
 		pluginInfoMap.remove(pluginInfo.getId());
 	}
 
-	private void stop(PluginInfo pluginInfo) {
+	protected void stop(PluginInfo pluginInfo) {
 		try {
 			pluginClassRegister.unRegister(pluginInfo);
 			pluginInfo.setPluginState(PluginState.STOPPED);
@@ -277,7 +277,7 @@ public class DefaultPluginManager implements PluginManager {
 		}
 	}
 
-	private Path copyToPluginPath(MultipartFile file) {
+	protected Path copyToPluginPath(MultipartFile file) {
 		String pluginPath = pluginAutoConfiguration.getPluginPath();
 		if (CharSequenceUtil.isBlank(pluginPath)) {
 			throw new PluginException("插件目录不存在");
@@ -319,5 +319,13 @@ public class DefaultPluginManager implements PluginManager {
 			}
 		}
 		return null;
+	}
+
+	public PluginAutoConfiguration getPluginAutoConfiguration() {
+		return pluginAutoConfiguration;
+	}
+
+	public Map<String, PluginInfo> getPluginInfoMap() {
+		return pluginInfoMap;
 	}
 }
