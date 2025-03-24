@@ -21,9 +21,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class DistributedPluginManager extends DefaultPluginManager {
 
-    private Map<String, PluginInfo> pluginInfoTmp = new ConcurrentHashMap<>();
+    private final Map<String, PluginInfo> pluginInfoTmp = new ConcurrentHashMap<>();
 
-    private MetaDataHandler metaDataHandler;
+    private final MetaDataHandler metaDataHandler;
 
 
     public DistributedPluginManager(PluginAutoConfiguration pluginAutoConfiguration,

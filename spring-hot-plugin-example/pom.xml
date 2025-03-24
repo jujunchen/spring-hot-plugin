@@ -14,6 +14,7 @@
         <module>plugin-demo-mybatis</module>
         <module>spring-hot-plugin-admin</module>
         <module>spring-hot-plugin-task-demo</module>
+        <module>spring-hot-plugin-distributed-demo</module>
     </modules>
 
     <properties>

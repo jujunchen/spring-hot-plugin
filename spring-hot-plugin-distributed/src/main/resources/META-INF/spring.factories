@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  vip.aliali.spring.plugin.mybatis.MybatisPluginConfiguration
+  vip.aliali.spring.plugin.distributed.DistributedConfiguration
