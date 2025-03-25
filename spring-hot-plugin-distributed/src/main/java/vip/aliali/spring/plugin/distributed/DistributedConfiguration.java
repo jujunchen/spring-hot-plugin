@@ -1,6 +1,6 @@
 package vip.aliali.spring.plugin.distributed;
 
-import com.alibaba.nacos.api.config.ConfigService;
+import com.alibaba.cloud.nacos.NacosConfigManager;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -26,8 +26,8 @@ public class DistributedConfiguration {
     }
 
     @Bean
-    @ConditionalOnClass(name = "com.alibaba.nacos.api.config.ConfigService")
-    public MetaDataHandler createMetaDataHandler(ConfigService configService) {
-        return new NacosMetaDataHandler(configService);
+    @ConditionalOnClass(name = "com.alibaba.cloud.nacos.NacosConfigManager")
+    public MetaDataHandler createMetaDataHandler(NacosConfigManager nacosConfigManager) {
+        return new NacosMetaDataHandler(nacosConfigManager);
     }
 }

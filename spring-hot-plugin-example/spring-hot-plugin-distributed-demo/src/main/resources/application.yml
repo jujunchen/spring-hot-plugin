@@ -20,10 +20,10 @@ spring:
 #    driver-class-name: org.h2.Driver
 #    username: sa
 #    password:
-    url: jdbc:mysql://localhost:3306/testdb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://192.168.123.30:3306/testdb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: root
+    password: root123
 
   # admin
 #  boot:
@@ -50,6 +50,6 @@ logging:
 #插件配置
 plugin:
   runMode: prod
-  backup-path: /home/cjj/spring-hot-plugin-distributed-demo/plugin-path/back
-  pluginPath: /home/cjj/spring-hot-plugin-distributed-demo/plugin-path
+  backup-path: /Users/chenjujun/java-projects/plugin-path/back
+  pluginPath: /Users/chenjujun/java-projects/plugin-path
   basePackage: csdn.itsaysay.demo

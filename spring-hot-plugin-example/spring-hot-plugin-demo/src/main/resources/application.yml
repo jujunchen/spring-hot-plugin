@@ -50,6 +50,6 @@ logging:
 #插件配置
 plugin:
   runMode: prod
-  backup-path: /home/cjj/spring-hot-plugin-demo/plugin-path/back
-  pluginPath: /home/cjj/spring-hot-plugin-demo/plugin-path
+  backup-path: /Users/chenjujun/java-projects/plugin-path/back
+  pluginPath: /Users/chenjujun/java-projects/plugin-path
   basePackage: csdn.itsaysay.demo

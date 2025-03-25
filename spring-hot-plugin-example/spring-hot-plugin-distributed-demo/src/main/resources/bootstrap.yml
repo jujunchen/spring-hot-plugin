@@ -11,11 +11,13 @@ spring:
 spring:
   cloud:
     nacos:
+      username: nacos
+      password: nacos
       config:
-        server-addr: localhost:8848
+        server-addr: 192.168.123.30:8848
         namespace: plugin-demo
       discovery:
-        server-addr: localhost:8848
+        server-addr: 192.168.123.30:8848
         namespace: plugin-demo
   config:
     activate:
