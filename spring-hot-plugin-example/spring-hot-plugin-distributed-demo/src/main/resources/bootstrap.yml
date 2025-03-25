@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+
+# dev环境
+---
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        namespace: plugin-demo
+      discovery:
+        server-addr: localhost:8848
+        namespace: plugin-demo
+  config:
+    activate:
+      on-profile: dev
+

@@ -20,10 +20,10 @@ spring:
 #    driver-class-name: org.h2.Driver
 #    username: sa
 #    password:
-    url: jdbc:mysql://172.17.0.2:3306/testdb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/testdb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: root123
+    password: root
 
   # admin
 #  boot:
