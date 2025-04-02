@@ -40,8 +40,5 @@ public class PluginConstants {
     public static final String JAR_File_ACROSS = "-";
 
     public static final String JAR_NAME = "jar";
-
-    public static final String PLUGIN_INSTALL = "@install";
-
-    public static final String PLUGIN_UNINSTALL = "@uninstall";
+    public static final String EMPTY = "empty";
 }

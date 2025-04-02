@@ -4,13 +4,13 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;
-import vip.aliali.spring.plugin.PluginAutoConfiguration;
-import vip.aliali.spring.plugin.PluginInfo;
-import vip.aliali.spring.plugin.util.DeployUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import vip.aliali.spring.plugin.PluginAutoConfiguration;
+import vip.aliali.spring.plugin.PluginInfo;
+import vip.aliali.spring.plugin.util.DeployUtils;
 
 import java.util.*;
 
@@ -23,8 +23,15 @@ public class ClearLoggerCache extends AbstractRegister {
 
     private Map<String, Logger> loggerCache;
 
+    private Set<String> classNames;
+
     public ClearLoggerCache(ApplicationContext main) {
         super(main);
+    }
+
+    @Override
+    public void refreshAfterRegister(ApplicationContext plugin, PluginInfo pluginInfo) {
+        classNames = DeployUtils.readClassFile(pluginInfo.getPath());
     }
 
     @Override
@@ -43,7 +50,7 @@ public class ClearLoggerCache extends AbstractRegister {
 
     private void clearLoggerCache(PluginInfo pluginInfo) {
         Set<String> keysToRemove = new HashSet<>();
-        List<String> classesNames = new ArrayList<>(DeployUtils.readClassFile(pluginInfo.getPath()));
+        List<String> classesNames = new ArrayList<>(classNames);
         if (CollUtil.isEmpty(classesNames)) {
             return;
         }

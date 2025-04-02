@@ -1,0 +1,25 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        file-extension: yaml
+
+# dev环境
+---
+spring:
+  cloud:
+    nacos:
+      username: nacos
+      password: nacos
+      config:
+        server-addr: 192.168.123.30:8848
+        namespace: plugin-demo
+      discovery:
+        server-addr: 192.168.123.30:8848
+        namespace: plugin-demo
+  config:
+    activate:
+      on-profile: dev
+

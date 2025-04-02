@@ -1,7 +1,7 @@
 # 指定 java 环境镜像
 FROM openjdk:8
 # 维护者信息
-LABEL service-name=spring-hot-plugin-distributed-demo
+LABEL service-name=spring-hot-plugin-distributed-demo-1
 # 复制文件到容器
 COPY target/*.jar /application.jar
 

@@ -2,6 +2,7 @@ package vip.aliali.spring.plugin.distributed.metadata;
 
 import vip.aliali.spring.plugin.PluginInfo;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -12,7 +13,8 @@ public interface MetaDataHandler {
     /**
      * 推送元数据变化
      */
-    void pushMetaData(PluginInfo pluginInfo, String pluginFlag, Consumer<String> callback);
+    void pushMetaData(List<PluginInfo> pluginInfoList);
 
+    void setCallback(Consumer<String> callback);
 
 }

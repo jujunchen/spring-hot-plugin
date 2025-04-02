@@ -1,0 +1,55 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  application:
+    name: spring-hot-plugin-distributed-demo
+  main:
+    allow-bean-definition-overriding: true
+  mvc:
+    throw-exception-if-no-handler-found: true
+    static-path-pattern: /static/**
+  datasource:
+#    url: jdbc:h2:mem:testdb
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password:
+    url: jdbc:mysql://192.168.123.30:3306/testdb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root123
+
+  # admin
+#  boot:
+#    admin:
+#      client:
+#        url: http://localhost:8081
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    env:
+      enabled: true
+
+
+# 开启调式日志
+logging:
+  file:
+    name: logs/spring-hot-plugin-distributed-demo.log
+  level:
+    csdn.itsaysay.plugin: DEBUG
+
+#插件配置
+plugin:
+  runMode: prod
+  backup-path: /Users/chenjujun/java-projects/plugin-path/back
+  pluginPath: /Users/chenjujun/java-projects/plugin-path
+  basePackage: csdn.itsaysay.demo
