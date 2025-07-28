@@ -108,21 +108,33 @@ public class PluginClassRegister {
 	private void applyUnRegister(ApplicationContext pluginApplicationContext, PluginInfo pluginInfo) {
 		Map<String, Register> registers = applicationContext.getBeansOfType(Register.class);
 		registers.forEach((name, register) -> {
-			register.unRegister(pluginApplicationContext, pluginInfo);
+			try {
+				register.unRegister(pluginApplicationContext, pluginInfo);
+			} catch (Exception ex) {
+				log.error("插件{},{},执行unRegister异常", pluginInfo.getId(), register.getClass().getSimpleName(), ex);
+			}
 		});
 	}
 
 	private void applyRefreshAfterRegister(ApplicationContext pluginApplicationContext, PluginInfo pluginInfo) {
 		Map<String, Register> registers = applicationContext.getBeansOfType(Register.class);
 		registers.forEach((name, register) -> {
-			register.refreshAfterRegister(pluginApplicationContext, pluginInfo);
+			try {
+				register.refreshAfterRegister(pluginApplicationContext, pluginInfo);
+			} catch (Exception ex) {
+				log.error("插件{},{},执行refreshAfterRegister异常", pluginInfo.getId(), register.getClass().getSimpleName(), ex);
+			}
 		});
 	}
 
 	private void applyRefreshBeforeRegister(AnnotationConfigApplicationContext pluginApplicationContext, PluginInfo pluginInfo) {
 		Map<String, Register> registers = applicationContext.getBeansOfType(Register.class);
 		registers.forEach((name, register) -> {
-			register.refreshBeforeRegister(pluginApplicationContext, pluginInfo);
+			try {
+				register.refreshBeforeRegister(pluginApplicationContext, pluginInfo);
+			} catch (Exception ex) {
+				log.error("插件{},{},执行refreshBeforeRegister异常", pluginInfo.getId(), register.getClass().getSimpleName(), ex);
+			}
 		});
 	}
 
