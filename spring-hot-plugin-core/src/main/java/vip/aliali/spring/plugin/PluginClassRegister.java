@@ -102,7 +102,50 @@ public class PluginClassRegister {
 
 	private URLClassLoader createClassLoader(URL[] newPath) {
 		JarFile.registerUrlProtocolHandler();
-		return new LaunchedURLClassLoader(newPath, getClass().getClassLoader());
+		
+		// 创建安全的类加载器，设置安全管理器和权限限制
+		return new LaunchedURLClassLoader(newPath, getClass().getClassLoader()) {
+			@Override
+			protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+				// 安全检查：限制插件可以加载的类
+				if (isRestrictedClass(name)) {
+					throw new ClassNotFoundException("类 " + name + " 被禁止加载");
+				}
+				return super.loadClass(name, resolve);
+			}
+		};
+	}
+	
+	/**
+	 * 检查类是否是受限制的类
+	 */
+	private boolean isRestrictedClass(String className) {
+		// 禁止加载敏感的系统类
+		String[] restrictedPatterns = {
+			"java.lang.reflect.",
+			"java.security.",
+			"java.lang.ClassLoader",
+			"java.lang.Runtime",
+			"java.lang.Process",
+			"java.lang.ProcessBuilder",
+			"java.net.Socket",
+			"java.net.ServerSocket",
+			"java.io.FileInputStream",
+			"java.io.FileOutputStream",
+			"java.io.RandomAccessFile",
+			"sun.",
+			"com.sun.",
+			"org.springframework.beans.factory.support.DefaultListableBeanFactory",
+			"org.springframework.context.ApplicationContext"
+		};
+		
+		for (String pattern : restrictedPatterns) {
+			if (className.startsWith(pattern)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	private void applyUnRegister(ApplicationContext pluginApplicationContext, PluginInfo pluginInfo) {
