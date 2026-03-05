@@ -207,7 +207,7 @@ public class DefaultPluginManager implements PluginManager {
 			pluginListenerFactory.startSuccess(pluginInfo);
 		} catch (Exception e) {
 			pluginListenerFactory.startFailure(pluginInfo, e);
-			throw new PluginException("插件[%s]启动异常", e, pluginInfo.getId());
+			throw new PluginException("插件[" + pluginInfo.getId() + "]启动异常", e);
 		}
 	}
 	
@@ -216,7 +216,7 @@ public class DefaultPluginManager implements PluginManager {
 	 */
 	private void validatePluginPermission(PluginInfo pluginInfo) {
 		if (!pluginAutoConfiguration.isPluginAllowed(pluginInfo.getId())) {
-			throw new PluginException("插件[%s]不在允许的插件白名单中", pluginInfo.getId());
+			throw new PluginException("插件[" + pluginInfo.getId() + "]不在允许的插件白名单中");
 		}
 	}
 	
@@ -292,7 +292,7 @@ public class DefaultPluginManager implements PluginManager {
 			pluginListenerFactory.stopSuccess(pluginInfo);
 			log.info("插件{}停止成功", pluginInfo.getId());
 		} catch (Exception e) {
-			throw new PluginException("插件[{}]停止异常", e, pluginInfo.getId());
+			throw new PluginException("插件[" + pluginInfo.getId() + "]停止异常", e);
 		}
 	}
 
@@ -311,7 +311,7 @@ public class DefaultPluginManager implements PluginManager {
 			String newPath = backupPath + File.separator + newName;
 			FileUtil.copyFile(pluginInfo.getPath(), newPath, StandardCopyOption.REPLACE_EXISTING);
 		} catch (Exception e) {
-			throw new PluginException("插件[%s]备份失败", e, pluginInfo.getId());
+			throw new PluginException("插件[" + pluginInfo.getId() + "]备份失败", e);
 		}
 	}
 
