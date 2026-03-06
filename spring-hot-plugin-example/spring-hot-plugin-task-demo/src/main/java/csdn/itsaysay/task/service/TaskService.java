@@ -17,7 +17,7 @@ import java.io.File;
 @EnableScheduling
 public class TaskService {
 
-    private static final String TASK_URL = "http://192.168.123.30:8080";
+    private static final String TASK_URL = "http://172.17.0.5:8080";
 
     public static final String INSALL_PLUGIN = "/plugin/install";
     public static final String UNINSTALL_PLUGIN = "/plugin/uninstall";
@@ -42,11 +42,13 @@ public class TaskService {
             //调用插入数据接口
             String insertId = HttpRequest.get(TASK_URL + MYBATIS_INSERT)
                     .execute().body();
-            ThreadUtil.sleep(1000);
+            log.info("插入数据：{}", insertId);
+//            ThreadUtil.sleep(1000);
             //查询数据
             String query = HttpRequest.get(TASK_URL + String.format(MYBATIS_QUERY, insertId))
                     .execute().body();
-            ThreadUtil.sleep(1000);
+            log.info("查询数据：{}", query);
+//            ThreadUtil.sleep(1000);
             //删除数据
             HttpRequest.delete(TASK_URL + String.format(MYBATIS_DELETE, insertId))
                     .execute();

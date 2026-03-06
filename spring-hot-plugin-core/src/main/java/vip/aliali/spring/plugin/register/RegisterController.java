@@ -40,6 +40,9 @@ public class RegisterController extends AbstractRegister {
             for (String className : classNames) {
                 Class<?> aClass = Class.forName(className, false, plugin.getClassLoader());
                 if (DeployUtils.isController(aClass)) {
+                    // 验证 Controller 类是否符合安全规范
+                    validateControllerClass(aClass);
+                    
                     Object bean = plugin.getBean(aClass);
                     Set<RequestMappingInfo> requestMappingInfos = registerController(bean);
                     printRegisterSuccessController(pluginInfo, requestMappingInfos);
@@ -51,6 +54,23 @@ public class RegisterController extends AbstractRegister {
         } catch (Exception ex) {
             log.error("register controller error", ex);
         }
+    }
+    
+    /**
+     * 验证 Controller 类的安全性
+     */
+    private void validateControllerClass(Class<?> controllerClass) {
+        // 检查类是否有不允许的注解或接口
+        // 这里可以扩展为更详细的安全检查
+        String className = controllerClass.getName();
+        
+        // 检查是否是系统敏感类
+        if (className.contains("admin") || className.contains("management") || 
+            className.contains("security") || className.contains("config")) {
+            log.warn("插件 Controller 包含敏感类名: {}", className);
+        }
+        
+        // 可以添加更多的安全检查逻辑
     }
 
     @Override

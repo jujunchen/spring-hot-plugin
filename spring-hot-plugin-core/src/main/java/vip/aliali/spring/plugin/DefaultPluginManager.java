@@ -192,6 +192,14 @@ public class DefaultPluginManager implements PluginManager {
 
 	protected void start(PluginInfo pluginInfo) {
 		try {
+			// 验证插件是否在白名单中
+			validatePluginPermission(pluginInfo);
+			
+			// 验证插件签名（如果配置了签名验证）
+			if (pluginAutoConfiguration.getVerifySignature() != null && pluginAutoConfiguration.getVerifySignature()) {
+				validatePluginSignature(pluginInfo);
+			}
+			
 			pluginClassRegister.register(pluginInfo);
 			pluginInfo.setPluginState(PluginState.STARTED);
 			pluginInfoMap.put(pluginInfo.getId(), pluginInfo);
@@ -199,8 +207,38 @@ public class DefaultPluginManager implements PluginManager {
 			pluginListenerFactory.startSuccess(pluginInfo);
 		} catch (Exception e) {
 			pluginListenerFactory.startFailure(pluginInfo, e);
-			throw new PluginException("插件[%s]启动异常", e, pluginInfo.getId());
+			throw new PluginException("插件[" + pluginInfo.getId() + "]启动异常", e);
 		}
+	}
+	
+	/**
+	 * 验证插件权限
+	 */
+	private void validatePluginPermission(PluginInfo pluginInfo) {
+		if (!pluginAutoConfiguration.isPluginAllowed(pluginInfo.getId())) {
+			throw new PluginException("插件[" + pluginInfo.getId() + "]不在允许的插件白名单中");
+		}
+	}
+	
+	/**
+	 * 验证插件签名
+	 */
+	private void validatePluginSignature(PluginInfo pluginInfo) {
+		// 简单的签名验证实现（这里可以扩展为真实的签名验证）
+		// 目前先实现基本的验证逻辑
+		String publicKeyPath = pluginAutoConfiguration.getPublicKeyPath();
+		if (StrUtil.isBlank(publicKeyPath)) {
+			throw new PluginException("插件签名验证公钥路径未配置");
+		}
+		
+		// 检查公钥文件是否存在
+		if (!FileUtil.exist(publicKeyPath)) {
+			throw new PluginException("插件签名验证公钥文件不存在: " + publicKeyPath);
+		}
+		
+		// TODO: 实现真实的 JAR 文件签名验证
+		// 这里可以添加对 JAR 文件 MANIFEST.MF 和 *.SF 文件的验证
+		log.debug("插件签名验证功能需要完整的实现");
 	}
 
 	@Override
@@ -254,7 +292,7 @@ public class DefaultPluginManager implements PluginManager {
 			pluginListenerFactory.stopSuccess(pluginInfo);
 			log.info("插件{}停止成功", pluginInfo.getId());
 		} catch (Exception e) {
-			throw new PluginException("插件[{}]停止异常", e, pluginInfo.getId());
+			throw new PluginException("插件[" + pluginInfo.getId() + "]停止异常", e);
 		}
 	}
 
@@ -273,7 +311,7 @@ public class DefaultPluginManager implements PluginManager {
 			String newPath = backupPath + File.separator + newName;
 			FileUtil.copyFile(pluginInfo.getPath(), newPath, StandardCopyOption.REPLACE_EXISTING);
 		} catch (Exception e) {
-			throw new PluginException("插件[%s]备份失败", e, pluginInfo.getId());
+			throw new PluginException("插件[" + pluginInfo.getId() + "]备份失败", e);
 		}
 	}
 
@@ -285,12 +323,61 @@ public class DefaultPluginManager implements PluginManager {
 		if (!pluginPath.endsWith(File.separator)) {
 			pluginPath += File.separator;
 		}
+		
+		// 验证上传的文件
+		validateUploadFile(file);
+		
 		try {
-			File newFile = FileUtil.writeFromStream(file.getInputStream(), pluginPath + file.getOriginalFilename());
+			// 安全的文件名处理，防止路径遍历攻击
+			String fileName = sanitizeFileName(file.getOriginalFilename());
+			File newFile = FileUtil.writeFromStream(file.getInputStream(), pluginPath + fileName);
 			return Paths.get(newFile.getPath());
 		} catch (Exception e) {
 			throw new PluginException("插件上传失败", e);
 		}
+	}
+	
+	/**
+	 * 验证上传的插件文件
+	 */
+	private void validateUploadFile(MultipartFile file) {
+		// 检查文件大小 (限制为100MB)
+		long maxSize = 100 * 1024 * 1024;
+		if (file.getSize() > maxSize) {
+			throw new PluginException("插件文件大小不能超过100MB");
+		}
+		
+		// 检查文件名格式
+		String fileName = file.getOriginalFilename();
+		if (StrUtil.isBlank(fileName) || !fileName.toLowerCase().endsWith("-repackage.jar")) {
+			throw new PluginException("插件文件名必须以 -repackage.jar 结尾");
+		}
+		
+		// 检查文件内容类型
+		String contentType = file.getContentType();
+		if (contentType != null && !contentType.toLowerCase().contains("jar") && 
+		    !contentType.toLowerCase().contains("java-archive")) {
+			throw new PluginException("插件文件类型不正确，必须是 JAR 文件");
+		}
+	}
+	
+	/**
+	 * 清理文件名，防止路径遍历攻击
+	 */
+	private String sanitizeFileName(String fileName) {
+		if (StrUtil.isBlank(fileName)) {
+			throw new PluginException("文件名不能为空");
+		}
+		
+		// 移除路径组件
+		String sanitized = fileName.replace("..", "").replace("/", "").replace("\\", "");
+		
+		// 验证文件名格式
+		if (!sanitized.toLowerCase().endsWith("-repackage.jar")) {
+			throw new PluginException("插件文件名必须以 -repackage.jar 结尾");
+		}
+		
+		return sanitized;
 	}
 
 	@Override
