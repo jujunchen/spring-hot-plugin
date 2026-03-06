@@ -16,14 +16,14 @@ spring:
     throw-exception-if-no-handler-found: true
     static-path-pattern: /static/**
   datasource:
-#    url: jdbc:h2:mem:testdb
-#    driver-class-name: org.h2.Driver
-#    username: sa
-#    password:
-    url: jdbc:mysql://172.17.0.2:3306/testdb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: root123
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+#    url: jdbc:mysql://172.17.0.2:3306/testdb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: root
+#    password: root123
 
   # admin
 #  boot:
@@ -53,3 +53,4 @@ plugin:
   backup-path: /Users/chenjujun/java-projects/plugin-path/back
   pluginPath: /Users/chenjujun/java-projects/plugin-path
   basePackage: csdn.itsaysay.demo
+  enable: true
